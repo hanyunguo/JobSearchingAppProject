@@ -21,6 +21,7 @@ public:
 
 private slots:
     void changePage(const QString &pageName);
+    void changeToTarget(const QDate &date);
 
 private:
     QStackedWidget *stackedWidget;
@@ -28,5 +29,6 @@ private:
     Page *calendarPage;
     Page *taskPage;
     Page *jobApplicationPage;
+    Page *targetDailyPlannerPage;
 };
 #endif

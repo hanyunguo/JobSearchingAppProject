@@ -3,6 +3,7 @@
 
 #include "Page.h"
 #include "SidebarComponent.h"
+#include "DailyPlannerComponent.h"
 
 class DailyPlannerPage : public Page
 {
@@ -11,9 +12,17 @@ class DailyPlannerPage : public Page
 public:
     explicit DailyPlannerPage(QWidget *parent = nullptr);
     void setupPage() override;
+    void changeToTargetDate(const QDate &date);
 
 private slots:
     void handleNavigation(const QString &pageName);
+    void handleDateChange(const QDate &date);
+    void handleTimeslotClicked(int hour);
+    void refreshSchedules();
+
+private:
+    DailyPlannerComponent *dailyPlannerComponent;
+    SidebarComponent *sidebar;
 };
 
 #endif // DAILYPLANNERPAGE_H

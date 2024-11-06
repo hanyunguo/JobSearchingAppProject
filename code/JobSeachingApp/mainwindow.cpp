@@ -18,18 +18,22 @@ MainWindow::MainWindow(QWidget *parent)
     calendarPage = new CalendarPage(this);
     taskPage = new TaskPage(this);
     jobApplicationPage = new JobApplicationPage(this);
+    targetDailyPlannerPage = new DailyPlannerPage(this);
 
     // Add pages to stacked widget
     stackedWidget->addWidget(dailyPlannerPage);
     stackedWidget->addWidget(calendarPage);
     stackedWidget->addWidget(taskPage);
     stackedWidget->addWidget(jobApplicationPage);
+    stackedWidget->addWidget(targetDailyPlannerPage);
 
     // Connect page signals to MainWindow slot
     connect(dailyPlannerPage, &Page::changePageRequested, this, &MainWindow::changePage);
     connect(calendarPage, &Page::changePageRequested, this, &MainWindow::changePage);
     connect(taskPage, &Page::changePageRequested, this, &MainWindow::changePage);
     connect(jobApplicationPage, &Page::changePageRequested, this, &MainWindow::changePage);
+    connect(targetDailyPlannerPage, &Page::changePageRequested, this, &MainWindow::changePage);
+    connect((CalendarPage*)calendarPage, &CalendarPage::targetPageRequested, this, &MainWindow::changeToTarget);
 
     // Set initial page
     stackedWidget->setCurrentWidget(dailyPlannerPage);
@@ -58,4 +62,15 @@ void MainWindow::changePage(const QString &pageName)
     {
         stackedWidget->setCurrentWidget(jobApplicationPage);
     }
+    else if (pageName == "TargetDailyPlannerPage")
+    {
+        stackedWidget->setCurrentWidget(targetDailyPlannerPage);
+    }
 }
+
+void MainWindow::changeToTarget(const QDate &date){
+    DailyPlannerPage* target = (DailyPlannerPage*) targetDailyPlannerPage;
+    target->changeToTargetDate(date);
+    changePage("TargetDailyPlannerPage");
+}
+
