@@ -2,7 +2,6 @@
 #include "AddScheduleComponent.h"
 #include "XMLManager.h"
 #include <QVBoxLayout>
-#include <QLabel>
 #include <QDateTime>
 
 DailyPlannerComponent::DailyPlannerComponent(QWidget *parent)
@@ -16,6 +15,7 @@ DailyPlannerComponent::DailyPlannerComponent(QWidget *parent)
 void DailyPlannerComponent::setDate(const QDate &date)
 {
     scheduleDate = date;
+    dateLabel->setText(scheduleDate.toString("yyyy-MM-dd"));
     loadSchedules();
     updateButtons();
 }
@@ -51,7 +51,7 @@ void DailyPlannerComponent::setupUI()
     QVBoxLayout *mainLayout = new QVBoxLayout(this);
 
     // Schedule date label
-    QLabel *dateLabel = new QLabel(scheduleDate.toString("yyyy-MM-dd"), this);
+    dateLabel = new QLabel(scheduleDate.toString("yyyy-MM-dd"), this);
     mainLayout->addWidget(dateLabel);
 
     // Create buttons for each time slot
@@ -107,4 +107,9 @@ void DailyPlannerComponent::updateButtons()
             button->setText(timeText);
         }
     }
+}
+
+QDate DailyPlannerComponent::getDate()
+{
+    return scheduleDate;
 }

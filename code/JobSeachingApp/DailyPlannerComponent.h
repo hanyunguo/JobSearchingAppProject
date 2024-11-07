@@ -6,6 +6,8 @@
 #include <vector>
 #include <QMap>
 #include <QPushButton>
+#include <QLabel>
+
 #include "Schedule.h"
 
 class DailyPlannerComponent : public QWidget
@@ -16,6 +18,7 @@ public:
     explicit DailyPlannerComponent(QWidget *parent = nullptr);
     void setDate(const QDate &date);
     void loadSchedules(); // Ensure this is declared
+    QDate getDate();
 
 signals:
     void timeSlotClicked(int hour);
@@ -30,6 +33,7 @@ private:
     QDate scheduleDate;
     std::vector<Schedule> schedules;           // Use std::vector as per your design
     QMap<int, QPushButton*> timeSlotButtons;   // Key: hour, Value: button
+    QLabel *dateLabel;
 };
 
 #endif // DAILYPLANNERCOMPONENT_H

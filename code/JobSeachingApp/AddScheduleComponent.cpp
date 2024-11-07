@@ -92,7 +92,6 @@ void AddScheduleComponent::addSchedule(const QDate &date, int hour, const Task &
     // Create a new Schedule object
     QDateTime dateTime(date, QTime(hour, 0));
     time_t timeslot = dateTime.toSecsSinceEpoch();
-
     Schedule schedule(timeslot, task, description, complete);
 
     // Save the schedule using XMLManager

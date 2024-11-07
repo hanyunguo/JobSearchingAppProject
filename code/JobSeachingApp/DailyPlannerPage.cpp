@@ -47,7 +47,7 @@ void DailyPlannerPage::handleDateChange(const QDate &date)
 
 void DailyPlannerPage::handleTimeslotClicked(int hour)
 {
-    AddScheduleComponent *addScheduleComponent = new AddScheduleComponent(QDate::currentDate(), hour, this);
+    AddScheduleComponent *addScheduleComponent = new AddScheduleComponent(dailyPlannerComponent->getDate(), hour, this);
 
     connect(addScheduleComponent, &AddScheduleComponent::scheduleUpdated, this, &DailyPlannerPage::refreshSchedules);
 

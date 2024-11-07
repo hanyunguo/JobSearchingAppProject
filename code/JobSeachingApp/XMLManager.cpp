@@ -1,6 +1,7 @@
 #include "XMLManager.h"
 #include <QFile>
 #include <QXmlStreamWriter>
+#include <QDir>
 #include <QXmlStreamReader>
 
 // Initialize the static instance
@@ -33,6 +34,7 @@ bool XMLManager::saveScheduleXML(const Schedule &schedule)
     // Add the new or updated schedule
     schedules.push_back(schedule);
 
+    qDebug() << QDir::currentPath();
     // Open the file for writing (overwrite)
     QFile file("schedules.xml");
     if (!file.open(QIODevice::WriteOnly | QIODevice::Text))
