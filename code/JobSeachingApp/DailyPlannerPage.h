@@ -17,8 +17,6 @@ public:
 private slots:
     void handleNavigation(const QString &pageName);
     void handleDateChange(const QDate &date);
-    void handleTimeslotClicked(int hour);
-    void refreshSchedules();
 
 private:
     DailyPlannerComponent *dailyPlannerComponent;

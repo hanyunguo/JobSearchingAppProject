@@ -26,6 +26,7 @@ public:
 
 signals:
     void scheduleUpdated(); // Signal emitted when a schedule is added, edited, or deleted
+    void closePopUp();
 
 private slots:
     void onSaveClicked();

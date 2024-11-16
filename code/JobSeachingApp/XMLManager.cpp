@@ -16,6 +16,60 @@ XMLManager::XMLManager()
 {
 }
 
+bool XMLManager::saveJobXML(const Job &job)
+{
+    // Read existing jobs
+    std::vector<Job> jobs = readJobXML();
+
+    // Remove any existing job with the same company and same application link
+    for (auto it = jobs.begin(); it != jobs.end(); ++it)
+    {
+        if (it->getJobTitle() == job.getJobTitle()
+            && it->getCompanyName() == job.getCompanyName()
+            && it->getApplicationLink() == job.getApplicationLink())
+        {
+            jobs.erase(it);
+            break;
+        }
+    }
+
+    // Add the new or updated schedule
+    jobs.push_back(job);
+
+    qDebug() << QDir::currentPath();
+    // Open the file for writing (overwrite)
+    QFile file("jobs.xml");
+    if (!file.open(QIODevice::WriteOnly | QIODevice::Text))
+    {
+        // Error opening file for writing
+        return false;
+    }
+
+    QXmlStreamWriter xmlWriter(&file);
+    xmlWriter.setAutoFormatting(true);
+    xmlWriter.writeStartDocument();
+    xmlWriter.writeStartElement("Jobs");
+
+    // Write all jobs to the XML file
+    for (const Job &jb : jobs)
+    {
+        xmlWriter.writeStartElement("Job");
+        xmlWriter.writeTextElement("JobTitle", QString::fromStdString(jb.getJobTitle()));
+        xmlWriter.writeTextElement("CompanyName", QString::fromStdString(jb.getCompanyName()));
+        xmlWriter.writeTextElement("ApplicationLink", QString::fromStdString(jb.getApplicationLink()));
+        xmlWriter.writeTextElement("JobDescription", QString::fromStdString(jb.getJobDescription()));
+
+        xmlWriter.writeEndElement(); // End Job
+    }
+
+    xmlWriter.writeEndElement(); // End Job
+    xmlWriter.writeEndDocument();
+
+    file.close();
+    return true;
+}
+
+
 bool XMLManager::saveScheduleXML(const Schedule &schedule)
 {
     // Read existing schedules
@@ -202,4 +256,65 @@ std::vector<Schedule> XMLManager::readScheduleXML()
 
     file.close();
     return schedules;
+}
+
+// Read all Jobs from XML
+std::vector<Job> XMLManager::readJobXML()
+{
+    std::vector<Job> jobs;
+
+    // Open the XML file
+    QFile file("jobs.xml");
+    if (!file.open(QIODevice::ReadOnly | QIODevice::Text))
+    {
+        // Error opening file for reading; return empty vector
+        return jobs;
+    }
+
+    QXmlStreamReader xmlReader(&file);
+
+    while (!xmlReader.atEnd() && !xmlReader.hasError())
+    {
+        QXmlStreamReader::TokenType token = xmlReader.readNext();
+
+        if (token == QXmlStreamReader::StartElement)
+        {
+            if (xmlReader.name() == "Job")
+            {
+                Job job;
+                while (!(xmlReader.tokenType() == QXmlStreamReader::EndElement && xmlReader.name() == "Job"))
+                {
+                    if (xmlReader.tokenType() == QXmlStreamReader::StartElement)
+                    {
+                        if (xmlReader.name() == "JobTitle")
+                        {
+                            job.setJobTitle(xmlReader.readElementText().toStdString());
+                        }
+                        else if (xmlReader.name() == "CompanyName")
+                        {
+                            job.setCompanyName(xmlReader.readElementText().toStdString());
+                        }
+                        else if (xmlReader.name() == "ApplicationLink")
+                        {
+                            job.setApplicationLink(xmlReader.readElementText().toStdString());
+                        }
+                        else if (xmlReader.name() == "JobDescription")
+                        {
+                            job.setJobDescription(xmlReader.readElementText().toStdString());
+                        }
+                    }
+                    xmlReader.readNext();
+                }
+                jobs.push_back(job);
+            }
+        }
+    }
+
+    if (xmlReader.hasError())
+    {
+        // Handle XML read error if necessary
+    }
+
+    file.close();
+    return jobs;
 }

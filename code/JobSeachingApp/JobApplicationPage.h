@@ -3,6 +3,7 @@
 
 #include "Page.h"
 #include "SidebarComponent.h"
+#include "JobListComponent.h"
 
 class JobApplicationPage : public Page
 {
@@ -14,6 +15,11 @@ public:
 
 private slots:
     void handleNavigation(const QString &pageName);
+    void refreshJobPage();
+
+private:
+    SidebarComponent *sidebar;
+    JobListComponent* jobListComponent;
 };
 
 #endif // JOBAPPLICATIONPAGE_H

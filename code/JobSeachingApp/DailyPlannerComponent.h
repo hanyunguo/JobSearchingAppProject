@@ -17,7 +17,7 @@ class DailyPlannerComponent : public QWidget
 public:
     explicit DailyPlannerComponent(QWidget *parent = nullptr);
     void setDate(const QDate &date);
-    void loadSchedules(); // Ensure this is declared
+    void loadSchedules();
     QDate getDate();
 
 signals:
@@ -29,6 +29,7 @@ public slots:
 private:
     void setupUI();
     void updateButtons();
+    void handleTimeslotClicked(int hour);
 
     QDate scheduleDate;
     std::vector<Schedule> schedules;           // Use std::vector as per your design

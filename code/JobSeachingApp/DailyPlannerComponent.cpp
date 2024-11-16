@@ -3,6 +3,8 @@
 #include "XMLManager.h"
 #include <QVBoxLayout>
 #include <QDateTime>
+#include <QDialog>
+
 
 DailyPlannerComponent::DailyPlannerComponent(QWidget *parent)
     : QWidget(parent), scheduleDate(QDate::currentDate())
@@ -65,7 +67,7 @@ void DailyPlannerComponent::setupUI()
         timeSlotButtons[hour] = button;
 
         connect(button, &QPushButton::clicked, [this, hour]() {
-            emit timeSlotClicked(hour);
+            emit handleTimeslotClicked(hour);
         });
 
         mainLayout->addWidget(button);
@@ -109,7 +111,16 @@ void DailyPlannerComponent::updateButtons()
     }
 }
 
-QDate DailyPlannerComponent::getDate()
+void DailyPlannerComponent::handleTimeslotClicked(int hour)
 {
-    return scheduleDate;
+    AddScheduleComponent *addScheduleComponent = new AddScheduleComponent(scheduleDate, hour, this);
+    QDialog *dialog = new QDialog(this);
+    connect(addScheduleComponent, &AddScheduleComponent::scheduleUpdated, this, &DailyPlannerComponent::updateSchedules);
+    connect(addScheduleComponent, &AddScheduleComponent::closePopUp, dialog, &QDialog::accept);
+    // Display the AddScheduleComponent in a modal dialog
+
+    QVBoxLayout *layout = new QVBoxLayout(dialog);
+    layout->addWidget(addScheduleComponent);
+    dialog->setLayout(layout);
+    dialog->exec();
 }

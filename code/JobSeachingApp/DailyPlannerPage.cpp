@@ -4,7 +4,6 @@
 
 #include "DailyPlannerPage.h"
 #include "DailyPlannerPageSidebarFactory.h"
-#include "AddScheduleComponent.h"
 
 DailyPlannerPage::DailyPlannerPage(QWidget *parent)
     : Page(parent)
@@ -24,8 +23,7 @@ void DailyPlannerPage::setupPage()
     dailyPlannerComponent = new DailyPlannerComponent(this);
     dailyPlannerComponent->setDate(QDate::currentDate());
 
-    // Corrected connect statement
-    connect(dailyPlannerComponent, &DailyPlannerComponent::timeSlotClicked, this, &DailyPlannerPage::handleTimeslotClicked);
+    // connect(dailyPlannerComponent, &DailyPlannerComponent::timeSlotClicked, this, &DailyPlannerPage::handleTimeslotClicked);
 
     // Layout
     QHBoxLayout *layout = new QHBoxLayout(this);
@@ -43,25 +41,6 @@ void DailyPlannerPage::handleNavigation(const QString &pageName)
 void DailyPlannerPage::handleDateChange(const QDate &date)
 {
     dailyPlannerComponent->setDate(date);
-}
-
-void DailyPlannerPage::handleTimeslotClicked(int hour)
-{
-    AddScheduleComponent *addScheduleComponent = new AddScheduleComponent(dailyPlannerComponent->getDate(), hour, this);
-
-    connect(addScheduleComponent, &AddScheduleComponent::scheduleUpdated, this, &DailyPlannerPage::refreshSchedules);
-
-    // Display the AddScheduleComponent in a modal dialog
-    QDialog *dialog = new QDialog(this);
-    QVBoxLayout *layout = new QVBoxLayout(dialog);
-    layout->addWidget(addScheduleComponent);
-    dialog->setLayout(layout);
-    dialog->exec();
-}
-
-void DailyPlannerPage::refreshSchedules()
-{
-    dailyPlannerComponent->updateSchedules();
 }
 
 void DailyPlannerPage::changeToTargetDate(const QDate &date){

@@ -19,6 +19,7 @@ public:
     bool saveTaskXML(const Task &task);
     bool saveScheduleXML(const Schedule &schedule);
     bool deleteScheduleXML(const Schedule &schedule);
+    std::vector<Job> readJobXML();
     std::vector<Schedule> readScheduleXML();
 
 private:

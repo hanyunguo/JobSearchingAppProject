@@ -156,7 +156,7 @@ void AddScheduleComponent::onSaveClicked()
     }
 
     // Close the component if necessary
-    close();
+    emit closePopUp();
 }
 
 void AddScheduleComponent::onDeleteClicked()
@@ -168,5 +168,5 @@ void AddScheduleComponent::onDeleteClicked()
     }
 
     // Close the component if necessary
-    close();
+    emit closePopUp();
 }

@@ -1,7 +1,10 @@
-#include "JobApplicationPage.h"
-#include "ToolsSidebarFactory.h"
 #include <QHBoxLayout>
 #include <QLabel>
+#include <QDialog>
+
+#include "JobApplicationPage.h"
+#include "ToolsSidebarFactory.h"
+#include "JobListComponent.h"
 
 JobApplicationPage::JobApplicationPage(QWidget *parent)
     : Page(parent)
@@ -18,12 +21,12 @@ void JobApplicationPage::setupPage()
     connect(sidebar, &SidebarComponent::navigationRequested, this, &JobApplicationPage::handleNavigation);
 
     // Main content area
-    QLabel *content = new QLabel("Job Application Content", this);
+    jobListComponent = new JobListComponent(this);
 
     // Layout
     QHBoxLayout *layout = new QHBoxLayout(this);
     layout->addWidget(sidebar);
-    layout->addWidget(content);
+    layout->addWidget(jobListComponent);
 
     setLayout(layout);
 }
@@ -31,4 +34,9 @@ void JobApplicationPage::setupPage()
 void JobApplicationPage::handleNavigation(const QString &pageName)
 {
     emit changePageRequested(pageName);
+}
+
+void JobApplicationPage::refreshJobPage()
+{
+    jobListComponent->updateJobList();
 }
