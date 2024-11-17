@@ -3,6 +3,7 @@
 
 #include "Page.h"
 #include "SidebarComponent.h"
+#include "TaskListComponent.h"
 
 class TaskPage : public Page
 {
@@ -14,6 +15,11 @@ public:
 
 private slots:
     void handleNavigation(const QString &pageName);
+    void refreshJobPage();
+
+private:
+    SidebarComponent *sidebar;
+    TaskListComponent* taskListComponent;
 };
 
 #endif // TASKPAGE_H

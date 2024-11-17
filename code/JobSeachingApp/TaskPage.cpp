@@ -17,13 +17,12 @@ void TaskPage::setupPage()
 
     connect(sidebar, &SidebarComponent::navigationRequested, this, &TaskPage::handleNavigation);
 
-    // Main content area
-    QLabel *content = new QLabel("Task Content", this);
+    taskListComponent = new TaskListComponent(this);
 
     // Layout
     QHBoxLayout *layout = new QHBoxLayout(this);
     layout->addWidget(sidebar);
-    layout->addWidget(content);
+    layout->addWidget(taskListComponent);
 
     setLayout(layout);
 }
@@ -32,3 +31,9 @@ void TaskPage::handleNavigation(const QString &pageName)
 {
     emit changePageRequested(pageName);
 }
+
+void TaskPage::refreshJobPage()
+{
+    taskListComponent->updateTaskList();
+}
+

@@ -11,6 +11,7 @@ CONFIG += c++17
 SOURCES += \
     AddJobComponent.cpp \
     AddScheduleComponent.cpp \
+    AddTaskComponent.cpp \
     CalendarPage.cpp \
     CalendarPageSidebar.cpp \
     CalendarPageSidebarFactory.cpp \
@@ -26,6 +27,7 @@ SOURCES += \
     Schedule.cpp \
     SidebarComponent.cpp \
     Task.cpp \
+    TaskListComponent.cpp \
     TaskPage.cpp \
     ToolsSidebar.cpp \
     ToolsSidebarFactory.cpp \
@@ -36,6 +38,7 @@ SOURCES += \
 HEADERS += \
     AddJobComponent.h \
     AddScheduleComponent.h \
+    AddTaskComponent.h \
     CalendarPage.h \
     CalendarPageSidebar.h \
     CalendarPageSidebarFactory.h \
@@ -52,6 +55,7 @@ HEADERS += \
     SidebarComponent.h \
     SidebarComponentFactory.h \
     Task.h \
+    TaskListComponent.h \
     TaskPage.h \
     ToolsSidebar.h \
     ToolsSidebarFactory.h \

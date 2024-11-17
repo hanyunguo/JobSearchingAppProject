@@ -1,8 +1,9 @@
-#include "XMLManager.h"
 #include <QFile>
 #include <QXmlStreamWriter>
 #include <QDir>
 #include <QXmlStreamReader>
+
+#include "XMLManager.h"
 
 // Initialize the static instance
 XMLManager XMLManager::xmlManager;
@@ -36,7 +37,6 @@ bool XMLManager::saveJobXML(const Job &job)
     // Add the new or updated schedule
     jobs.push_back(job);
 
-    qDebug() << QDir::currentPath();
     // Open the file for writing (overwrite)
     QFile file("jobs.xml");
     if (!file.open(QIODevice::WriteOnly | QIODevice::Text))
@@ -69,6 +69,62 @@ bool XMLManager::saveJobXML(const Job &job)
     return true;
 }
 
+bool XMLManager::saveTaskXML(const Task &task)
+{
+    // Read existing tasks
+    std::vector<Task> tasks = readTaskXML();
+
+    // Remove any existing task with the same description and deadline
+    auto it = std::find_if(tasks.begin(), tasks.end(), [&task](const Task &existingTask) {
+        return existingTask.getTaskDescription() == task.getTaskDescription() &&
+               existingTask.getDeadline() == task.getDeadline();
+    });
+    if (it != tasks.end()) {
+        tasks.erase(it);  // Remove existing task
+    }
+
+    // Add the new or updated task
+    tasks.push_back(task);
+
+    // Open the file for writing (overwrite)
+    QFile file("tasks.xml");
+    if (!file.open(QIODevice::WriteOnly | QIODevice::Text)) {
+        qDebug() << "Error opening file for writing tasks.";
+        return false;
+    }
+
+    QXmlStreamWriter xmlWriter(&file);
+    xmlWriter.setAutoFormatting(true);
+    xmlWriter.writeStartDocument();
+    xmlWriter.writeStartElement("Tasks");
+
+    // Write all tasks to the XML file
+    for (const Task &tk : tasks) {
+        xmlWriter.writeStartElement("Task");
+
+        // Convert time_t deadline to QDateTime
+        QDateTime dateTime = QDateTime::fromSecsSinceEpoch(tk.getDeadline());
+        QString formattedDeadline = dateTime.toString("yyyy-MM-dd HH:mm:ss");
+        qDebug() << "xml tk.getDeadline()" << tk.getDeadline();
+        // qDebug() << "xml dateTime" << dateTime;
+        // qDebug() << "xml formattedDeadline" << formattedDeadline;
+
+
+        // Write the formatted deadline to XML
+        xmlWriter.writeTextElement("Deadline", formattedDeadline);
+
+        xmlWriter.writeTextElement("TaskDescription", QString::fromStdString(tk.getTaskDescription()));
+        xmlWriter.writeTextElement("Priority", QString::number(tk.getPriority()));
+
+        xmlWriter.writeEndElement();  // End Task
+    }
+
+    xmlWriter.writeEndElement();  // End Tasks
+    xmlWriter.writeEndDocument();
+
+    file.close();
+    return true;
+}
 
 bool XMLManager::saveScheduleXML(const Schedule &schedule)
 {
@@ -317,4 +373,69 @@ std::vector<Job> XMLManager::readJobXML()
 
     file.close();
     return jobs;
+}
+
+// Read all Tasks from XML
+std::vector<Task> XMLManager::readTaskXML()
+{
+    std::vector<Task> tasks;
+
+    // Open the XML file
+    QFile file("tasks.xml");
+    if (!file.open(QIODevice::ReadOnly | QIODevice::Text))
+    {
+        // Error opening file for reading; return empty vector
+        return tasks;
+    }
+
+    QXmlStreamReader xmlReader(&file);
+
+    while (!xmlReader.atEnd() && !xmlReader.hasError())
+    {
+        QXmlStreamReader::TokenType token = xmlReader.readNext();
+
+        if (token == QXmlStreamReader::StartElement)
+        {
+            if (xmlReader.name() == "Task")
+            {
+                Task task;
+                while (!(xmlReader.tokenType() == QXmlStreamReader::EndElement && xmlReader.name() == "Task"))
+                {
+                    if (xmlReader.tokenType() == QXmlStreamReader::StartElement)
+                    {
+                        if (xmlReader.name() == "Deadline")
+                        {
+                            // Read the deadline as a string
+                            QString deadlineString = xmlReader.readElementText();
+
+                            // Convert the string to QDateTime (assuming the format matches)
+                            QDateTime dateTime = QDateTime::fromString(deadlineString, "yyyy-MM-dd HH:mm:ss");
+                            // Convert QDateTime to time_t
+                            time_t deadline = dateTime.toSecsSinceEpoch();
+                            // Set the deadline as time_t
+                            task.setDeadline(deadline);
+                        }
+                        else if (xmlReader.name() == "TaskDescription")
+                        {
+                            task.setTaskDescription(xmlReader.readElementText().toStdString());
+                        }
+                        else if (xmlReader.name() == "Priority")
+                        {
+                            task.setPriority(xmlReader.readElementText().toInt());
+                        }
+                    }
+                    xmlReader.readNext();
+                }
+                tasks.push_back(task);
+            }
+        }
+    }
+
+    if (xmlReader.hasError())
+    {
+        // Handle XML read error if necessary
+    }
+
+    file.close();
+    return tasks;
 }
