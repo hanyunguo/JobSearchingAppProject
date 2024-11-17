@@ -47,9 +47,7 @@ void TaskListComponent::updateTaskList()
     {
         taskTable->insertRow(row);
 
-        time_t deadline = task.getDeadline();
-        QDateTime dateTime = QDateTime::fromSecsSinceEpoch(deadline);
-        QString deadlineStr = dateTime.toString("yyyy-MM-dd HH:mm:ss");
+        QString deadlineStr = task.getDeadline().toString("yyyy-MM-dd HH:mm:ss");
 
         // Create items for each cell
         QTableWidgetItem *deadlineItem = new QTableWidgetItem(deadlineStr);

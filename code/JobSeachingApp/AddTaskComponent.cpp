@@ -48,15 +48,12 @@ void AddTaskComponent::setupUI()
 
     // Handle the button click to show the calendar
     connect(calendarButton, &QPushButton::clicked, [this, calendarWidget]() {
-        qDebug() << "Calendar button clicked.";
         // Show the calendar when the button is clicked
         calendarWidget->show();
     });
 
     // Handle the calendar date selection
     connect(calendarWidget, &QCalendarWidget::clicked, [this, calendarWidget, timeEdit](const QDate &date) {
-        qDebug() << "Calendar date clicked: " << date.toString("yyyy-MM-dd");
-
         // Ensure timeEdit is valid and time is set
         if (timeEdit->time().isValid()) {
             QString formattedDate = date.toString("yyyy-MM-dd");
@@ -68,8 +65,6 @@ void AddTaskComponent::setupUI()
 
             // store the selected date and time for further use
             selectedDeadline = QDateTime(date, timeEdit->time());
-            qDebug() << "Formatted Deadline: " << formattedDeadline;
-            qDebug() << "Selected Time: " << timeEdit->time().toString("HH:mm:ss"); // Debug the time
 
             // Hide the calendar after selection
             calendarWidget->hide();
@@ -115,12 +110,8 @@ void AddTaskComponent::connectSignals()
 
 void AddTaskComponent::addTask(const QDateTime &deadline, const std::string &taskDescription, const int &priority)
 {
-
-    // Convert the QDateTime to time_t (seconds since epoch)
-    time_t ddl = static_cast<time_t>(deadline.toSecsSinceEpoch());
-
     // Create the Task object with deadline, description, and priority
-    Task task(ddl, taskDescription, priority);
+    Task task(deadline, taskDescription, priority);
 
     // Save the task using XMLManager
     XMLManager::getInstance().saveTaskXML(task);
@@ -134,11 +125,8 @@ void AddTaskComponent::addTask(const QDateTime &deadline, const std::string &tas
 
 void AddTaskComponent::editTask(const QDateTime &deadline, const std::string &taskDescription, const int &priority)
 {
-    // Convert the QDateTime to time_t (seconds since epoch)
-    time_t ddl = static_cast<time_t>(deadline.toSecsSinceEpoch());
-
     // Update the current task
-    currentTask.setDeadline(ddl);
+    currentTask.setDeadline(deadline);
     currentTask.setTaskDescription(taskDescription);
     currentTask.setPriority(priority);
 

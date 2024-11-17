@@ -102,16 +102,8 @@ bool XMLManager::saveTaskXML(const Task &task)
     for (const Task &tk : tasks) {
         xmlWriter.writeStartElement("Task");
 
-        // Convert time_t deadline to QDateTime
-        QDateTime dateTime = QDateTime::fromSecsSinceEpoch(tk.getDeadline());
-        QString formattedDeadline = dateTime.toString("yyyy-MM-dd HH:mm:ss");
-        qDebug() << "xml tk.getDeadline()" << tk.getDeadline();
-        // qDebug() << "xml dateTime" << dateTime;
-        // qDebug() << "xml formattedDeadline" << formattedDeadline;
-
-
         // Write the formatted deadline to XML
-        xmlWriter.writeTextElement("Deadline", formattedDeadline);
+        xmlWriter.writeTextElement("Deadline", tk.getDeadline().toString("yyyy-MM-dd HH:mm:ss"));
 
         xmlWriter.writeTextElement("TaskDescription", QString::fromStdString(tk.getTaskDescription()));
         xmlWriter.writeTextElement("Priority", QString::number(tk.getPriority()));
@@ -144,7 +136,6 @@ bool XMLManager::saveScheduleXML(const Schedule &schedule)
     // Add the new or updated schedule
     schedules.push_back(schedule);
 
-    qDebug() << QDir::currentPath();
     // Open the file for writing (overwrite)
     QFile file("schedules.xml");
     if (!file.open(QIODevice::WriteOnly | QIODevice::Text))
@@ -410,10 +401,8 @@ std::vector<Task> XMLManager::readTaskXML()
 
                             // Convert the string to QDateTime (assuming the format matches)
                             QDateTime dateTime = QDateTime::fromString(deadlineString, "yyyy-MM-dd HH:mm:ss");
-                            // Convert QDateTime to time_t
-                            time_t deadline = dateTime.toSecsSinceEpoch();
-                            // Set the deadline as time_t
-                            task.setDeadline(deadline);
+
+                            task.setDeadline(dateTime);
                         }
                         else if (xmlReader.name() == "TaskDescription")
                         {

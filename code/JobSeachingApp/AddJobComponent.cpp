@@ -110,7 +110,6 @@ void AddJobComponent::deleteJob(const Job &job)
 
 void AddJobComponent::onSaveClicked()
 {
-    qDebug() << "Save button clicked";
     // Get input values from UI elements
     QString jobTitle = jobTitleEdit->text();
     QString companyName = companyNameEdit->text();

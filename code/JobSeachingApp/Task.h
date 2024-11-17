@@ -1,7 +1,7 @@
 #ifndef TASK_H
 #define TASK_H
 
-#include <ctime>
+#include <QDateTime>
 #include <string>
 
 class Task
@@ -9,20 +9,20 @@ class Task
 public:
     Task();
     Task(const std::string &taskDescription);
-    Task(time_t deadline, const std::string &taskDescription, int priority);
+    Task(QDateTime deadline, const std::string &taskDescription, int priority);
 
     // Getters
-    time_t getDeadline() const;
+    QDateTime getDeadline() const;
     std::string getTaskDescription() const;
     int getPriority() const;
 
     // Setters
-    void setDeadline(time_t deadline);
+    void setDeadline(QDateTime deadline);
     void setTaskDescription(const std::string &taskDescription);
     void setPriority(int priority);
 
 private:
-    time_t deadline;
+    QDateTime deadline;
     std::string taskDescription;
     int priority;
 };
