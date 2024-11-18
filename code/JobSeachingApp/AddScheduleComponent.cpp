@@ -8,7 +8,6 @@
 
 #include "AddScheduleComponent.h"
 #include "XMLManager.h"
-#include "Task.h"
 #include "Schedule.h"
 
 AddScheduleComponent::AddScheduleComponent(const QDate &date, int hour, QWidget *parent)
@@ -87,7 +86,7 @@ void AddScheduleComponent::connectSignals()
 //     }
 // }
 
-void AddScheduleComponent::addSchedule(const QDate &date, int hour, const Task &task, const std::string &description, bool complete)
+void AddScheduleComponent::addSchedule(const QDate &date, int hour, const std::string &task, const std::string &description, bool complete)
 {
     // Create a new Schedule object
     QDateTime dateTime(date, QTime(hour, 0));
@@ -116,7 +115,7 @@ void AddScheduleComponent::addSchedule(const QDate &date, int hour, const Task &
 //     emit scheduleUpdated();
 // }
 
-void AddScheduleComponent::editSchedule(const QDate &date, int hour, const Task &task, const std::string &description, bool complete)
+void AddScheduleComponent::editSchedule(const QDate &date, int hour, const std::string &task, const std::string &description, bool complete)
 {
     // Update the current Schedule object
     QDateTime dateTime(date, QTime(hour, 0));
@@ -142,17 +141,15 @@ void AddScheduleComponent::onSaveClicked()
     bool completed = completedCheck->isChecked();
 
     // Create Task object
-    Task task(taskName.toStdString());
-
     if (currentSchedule.getTimeslot() == 0)
     {
         // Adding a new schedule
-        addSchedule(date, hour, task, description.toStdString(), completed);
+        addSchedule(date, hour, taskName.toStdString(), description.toStdString(), completed);
     }
     else
     {
         // Editing an existing schedule
-        editSchedule(date, hour, task, description.toStdString(), completed);
+        editSchedule(date, hour, taskName.toStdString(), description.toStdString(), completed);
     }
 
     // Close the component if necessary

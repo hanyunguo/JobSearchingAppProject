@@ -9,7 +9,8 @@
 
 #include "AddTaskComponent.h"
 #include "XMLManager.h"
-#include "Task.h"
+#include "SimpleTask.h"
+#include "PriorityTaskDecorator.h"
 
 AddTaskComponent::AddTaskComponent(QWidget *parent)
     : QWidget(parent)
@@ -47,7 +48,7 @@ void AddTaskComponent::setupUI()
     mainLayout->addWidget(selectedDateLabel);
 
     // Handle the button click to show the calendar
-    connect(calendarButton, &QPushButton::clicked, [this, calendarWidget]() {
+    connect(calendarButton, &QPushButton::clicked, [calendarWidget]() {
         // Show the calendar when the button is clicked
         calendarWidget->show();
     });
@@ -111,7 +112,11 @@ void AddTaskComponent::connectSignals()
 void AddTaskComponent::addTask(const QDateTime &deadline, const std::string &taskDescription, const int &priority)
 {
     // Create the Task object with deadline, description, and priority
-    Task task(deadline, taskDescription, priority);
+    Task task = SimpleTask(deadline, taskDescription);
+
+    if(priority > 0){
+        task = PriorityTaskDecorator(&task, priority);
+    }
 
     // Save the task using XMLManager
     XMLManager::getInstance().saveTaskXML(task);
@@ -126,12 +131,12 @@ void AddTaskComponent::addTask(const QDateTime &deadline, const std::string &tas
 void AddTaskComponent::editTask(const QDateTime &deadline, const std::string &taskDescription, const int &priority)
 {
     // Update the current task
-    currentTask.setDeadline(deadline);
-    currentTask.setTaskDescription(taskDescription);
-    currentTask.setPriority(priority);
+    // currentTask.setDeadline(deadline);
+    // currentTask.setTaskDescription(taskDescription);
+    // currentTask.setPriority(priority);
 
     // Save the updated task using XMLManager
-    XMLManager::getInstance().saveTaskXML(currentTask);
+    // XMLManager::getInstance().saveTaskXML(currentTask);
 
     // Emit the signal to notify that the task has been updated
     emit taskUpdated();
@@ -143,7 +148,7 @@ void AddTaskComponent::deleteTask(const Task &task)
     // XMLManager::getInstance().deletetaskXML(task);
 
     // Clear the current task
-    currentTask = Task();
+    // currentTask = Task();
 
     // Emit the signal to notify that the task has been updated
     emit taskUpdated();
@@ -162,23 +167,9 @@ void AddTaskComponent::onSaveClicked()
     // Get input values from UI elements
     QString taskDescription = taskDescriptionEdit->text();
     QString priority = priorityEdit->text();
-
-    // Check if the input values are valid
-    if (taskDescription.isEmpty() || priority.isEmpty()) {
-        qDebug() << "Some fields are empty. Please check the input.";
-        return; // Optionally show a warning to the user
-    }
-
     int priorityInt = priority.toInt();
 
-    // Proceed to add or edit the task with selectedDeadline
-    if (currentTask.getTaskDescription().empty()) {
-        // Adding a new task
-        addTask(selectedDeadline, taskDescription.toStdString(), priorityInt);
-    } else {
-        // Editing an existing task
-        editTask(selectedDeadline, taskDescription.toStdString(), priorityInt);
-    }
+    addTask(selectedDeadline, taskDescription.toStdString(), priorityInt);
 
     // Close the component if necessary
     emit closePopUp();
@@ -186,12 +177,6 @@ void AddTaskComponent::onSaveClicked()
 
 void AddTaskComponent::onDeleteClicked()
 {
-    if (!currentTask.getTaskDescription().empty())
-    {
-        // Delete the current task
-        // deletetask(currenttask);
-    }
-
     // Close the component if necessary
     emit closePopUp();
 }

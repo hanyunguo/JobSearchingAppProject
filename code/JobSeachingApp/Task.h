@@ -7,24 +7,18 @@
 class Task
 {
 public:
-    Task();
-    Task(const std::string &taskDescription);
-    Task(QDateTime deadline, const std::string &taskDescription, int priority);
+    Task(){}
 
     // Getters
-    QDateTime getDeadline() const;
-    std::string getTaskDescription() const;
-    int getPriority() const;
+    virtual QDateTime getDeadline() const{return QDateTime();}
+    virtual std::string getTaskDescription() const{return "";}
+    virtual int getPriority() const{return 0;}
 
     // Setters
-    void setDeadline(QDateTime deadline);
-    void setTaskDescription(const std::string &taskDescription);
-    void setPriority(int priority);
+    virtual void setDeadline(QDateTime deadline){}
+    virtual void setTaskDescription(const std::string taskDescription){}
+    virtual void setPriority(int priority){}
 
-private:
-    QDateTime deadline;
-    std::string taskDescription;
-    int priority;
 };
 
 #endif // TASK_H

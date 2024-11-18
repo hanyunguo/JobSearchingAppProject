@@ -154,13 +154,9 @@ bool XMLManager::saveScheduleXML(const Schedule &schedule)
     {
         xmlWriter.writeStartElement("Schedule");
         xmlWriter.writeTextElement("Timeslot", QString::number(sched.getTimeslot()));
+        xmlWriter.writeTextElement("TaskName", QString::fromStdString(sched.getTask()));
         xmlWriter.writeTextElement("Description", QString::fromStdString(sched.getDescription()));
         xmlWriter.writeTextElement("Completed", sched.isCompleted() ? "true" : "false");
-
-        // Write Task
-        xmlWriter.writeStartElement("Task");
-        xmlWriter.writeTextElement("TaskName", QString::fromStdString(sched.getTask().getTaskDescription()));
-        xmlWriter.writeEndElement(); // End Task
 
         xmlWriter.writeEndElement(); // End Schedule
     }
@@ -214,13 +210,9 @@ bool XMLManager::deleteScheduleXML(const Schedule &schedule)
     {
         xmlWriter.writeStartElement("Schedule");
         xmlWriter.writeTextElement("Timeslot", QString::number(sched.getTimeslot()));
+        xmlWriter.writeTextElement("Description", QString::fromStdString(sched.getTask()));
         xmlWriter.writeTextElement("Description", QString::fromStdString(sched.getDescription()));
         xmlWriter.writeTextElement("Completed", sched.isCompleted() ? "true" : "false");
-
-        // Write Task
-        xmlWriter.writeStartElement("Task");
-        xmlWriter.writeTextElement("TaskName", QString::fromStdString(sched.getTask().getTaskDescription()));
-        xmlWriter.writeEndElement(); // End Task
 
         xmlWriter.writeEndElement(); // End Schedule
     }
@@ -274,19 +266,7 @@ std::vector<Schedule> XMLManager::readScheduleXML()
                         }
                         else if (xmlReader.name() == "Task")
                         {
-                            Task task;
-                            while (!(xmlReader.tokenType() == QXmlStreamReader::EndElement && xmlReader.name() == "Task"))
-                            {
-                                if (xmlReader.tokenType() == QXmlStreamReader::StartElement)
-                                {
-                                    if (xmlReader.name() == "TaskName")
-                                    {
-                                        task.setTaskDescription(xmlReader.readElementText().toStdString());
-                                    }
-                                }
-                                xmlReader.readNext();
-                            }
-                            schedule.setTask(task);
+                            schedule.setTask(xmlReader.readElementText().toStdString());
                         }
                     }
                     xmlReader.readNext();
@@ -389,7 +369,7 @@ std::vector<Task> XMLManager::readTaskXML()
         {
             if (xmlReader.name() == "Task")
             {
-                Task task;
+                SimpleTask task;
                 while (!(xmlReader.tokenType() == QXmlStreamReader::EndElement && xmlReader.name() == "Task"))
                 {
                     if (xmlReader.tokenType() == QXmlStreamReader::StartElement)

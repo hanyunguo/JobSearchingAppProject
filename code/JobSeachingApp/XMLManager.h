@@ -5,7 +5,7 @@
 #include <vector>
 
 #include "Schedule.h"
-#include "Task.h"
+#include "SimpleTask.h"
 #include "Job.h"
 
 class XMLManager

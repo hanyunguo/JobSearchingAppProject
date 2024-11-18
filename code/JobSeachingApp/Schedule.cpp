@@ -6,7 +6,7 @@ Schedule::Schedule()
 {
 }
 
-Schedule::Schedule(time_t timeslot, const Task &task, const std::string &description, bool completed)
+Schedule::Schedule(time_t timeslot, const std::string &task, const std::string &description, bool completed)
     : timeslot(timeslot), task(task), description(description), completed(completed)
 {
 }
@@ -21,12 +21,12 @@ void Schedule::setTimeslot(time_t timeslot)
     this->timeslot = timeslot;
 }
 
-Task Schedule::getTask() const
+std::string Schedule::getTask() const
 {
     return task;
 }
 
-void Schedule::setTask(const Task &task)
+void Schedule::setTask(const std::string &task)
 {
     this->task = task;
 }

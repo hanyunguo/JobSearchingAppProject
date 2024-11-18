@@ -26,7 +26,6 @@ SOURCES += \
     Page.cpp \
     Schedule.cpp \
     SidebarComponent.cpp \
-    Task.cpp \
     TaskListComponent.cpp \
     TaskPage.cpp \
     ToolsSidebar.cpp \
@@ -51,10 +50,13 @@ HEADERS += \
     JobApplicationPage.h \
     JobListComponent.h \
     Page.h \
+    PriorityTaskDecorator.h \
     Schedule.h \
     SidebarComponent.h \
     SidebarComponentFactory.h \
+    SimpleTask.h \
     Task.h \
+    TaskDecorator.h \
     TaskListComponent.h \
     TaskPage.h \
     ToolsSidebar.h \

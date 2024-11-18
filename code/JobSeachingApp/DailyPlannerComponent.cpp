@@ -94,7 +94,7 @@ void DailyPlannerComponent::updateButtons()
             {
                 QString labelText = QString("%1:00 - %2: %3")
                 .arg(hour, 2, 10, QChar('0'))
-                    .arg(QString::fromStdString(schedule.getTask().getTaskDescription()))
+                    .arg(QString::fromStdString(schedule.getTask()))
                     .arg(QString::fromStdString(schedule.getDescription()));
                 button->setText(labelText);
                 scheduleFound = true;

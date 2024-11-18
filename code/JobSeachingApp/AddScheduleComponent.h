@@ -5,7 +5,6 @@
 #include <QDate>
 
 #include "Schedule.h"
-#include "Task.h"
 
 class QLineEdit;
 class QPushButton;
@@ -21,9 +20,9 @@ public:
     explicit AddScheduleComponent(const QDate &date, int hour, QWidget *parent = nullptr);
 
     // Methods to add, delete, and edit schedules
-    void addSchedule(const QDate &date, int hour, const Task &task, const std::string &description, bool complete);
+    void addSchedule(const QDate &date, int hour, const std::string &task, const std::string &description, bool complete);
     // void deleteSchedule(const Schedule &schedule);
-    void editSchedule(const QDate &date, int hour, const Task &task, const std::string &description, bool complete);
+    void editSchedule(const QDate &date, int hour, const std::string &task, const std::string &description, bool complete);
 
 signals:
     void scheduleUpdated(); // Signal emitted when a schedule is added, edited, or deleted
