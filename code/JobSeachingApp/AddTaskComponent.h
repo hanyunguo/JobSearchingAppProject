@@ -6,6 +6,7 @@
 #include <QLineEdit>
 #include <QPushButton>
 #include <QLabel>
+#include <QCheckBox>
 
 #include "Task.h"
 
@@ -24,7 +25,6 @@ signals:
 
 private slots:
     void onSaveClicked();
-    void onDeleteClicked();
 
 private:
     void setupUI();
@@ -34,15 +34,16 @@ private:
     QLineEdit *deadlineEdit;
     QLineEdit *taskDescriptionEdit;
     QLineEdit *priorityEdit;
+    QCheckBox *isPriorityTask;
 
     QLabel *selectedDateLabel;  // Label to display the selected deadline
     QDateTime selectedDeadline;     // Variable to store the selected date
+    QLabel *priorityLabel;
 
     // Member variables
-    Task currentTask;
+    Task *currentTask;
 
     QPushButton *saveButton;
-    QPushButton *deleteButton;
 };
 
 #endif // ADDTASKCOMPONENT_H

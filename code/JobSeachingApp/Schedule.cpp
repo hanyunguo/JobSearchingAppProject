@@ -1,4 +1,3 @@
-// Schedule.cpp
 #include "Schedule.h"
 
 Schedule::Schedule()

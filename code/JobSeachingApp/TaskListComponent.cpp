@@ -43,16 +43,16 @@ void TaskListComponent::updateTaskList()
     taskList = XMLManager::getInstance().readTaskXML();
 
     int row = 0;
-    for (const Task &task : taskList)
+    for (Task* task : taskList)
     {
         taskTable->insertRow(row);
 
-        QString deadlineStr = task.getDeadline().toString("yyyy-MM-dd HH:mm:ss");
+        QString deadlineStr = task->getDeadline().toString("yyyy-MM-dd HH:mm:ss");
 
         // Create items for each cell
         QTableWidgetItem *deadlineItem = new QTableWidgetItem(deadlineStr);
-        QTableWidgetItem *taskDescriptionItem = new QTableWidgetItem(QString::fromStdString(task.getTaskDescription()));
-        QTableWidgetItem *priorityItem = new QTableWidgetItem(QString::number(task.getPriority()));
+        QTableWidgetItem *taskDescriptionItem = new QTableWidgetItem(QString::fromStdString(task->getTaskDescription()));
+        QTableWidgetItem *priorityItem = new QTableWidgetItem(QString::number(task->getPriority()));
 
         taskTable->setItem(row, 0, deadlineItem);
         taskTable->setItem(row, 1, taskDescriptionItem);

@@ -24,7 +24,7 @@ private:
 
     QTableWidget *taskTable;
     QPushButton *addTaskButton;
-    std::vector<Task> taskList;
+    std::vector<Task*> taskList;
 };
 
 #endif // TASKLISTCOMPONENT_H

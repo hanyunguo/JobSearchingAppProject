@@ -48,7 +48,7 @@ void AddTaskComponent::setupUI()
     mainLayout->addWidget(selectedDateLabel);
 
     // Handle the button click to show the calendar
-    connect(calendarButton, &QPushButton::clicked, [calendarWidget]() {
+    connect(calendarButton, &QPushButton::clicked, [this, calendarWidget]() {
         // Show the calendar when the button is clicked
         calendarWidget->show();
     });
@@ -81,21 +81,31 @@ void AddTaskComponent::setupUI()
     taskDescriptionEdit = new QLineEdit(this);
     mainLayout->addWidget(taskDescriptionEdit);
 
-    // Priority
-    QLabel *priorityLabel = new QLabel("Priority:", this);
+    // Completed Checkbox
+    isPriorityTask = new QCheckBox("Is this a Priority Task?", this);
+    isPriorityTask->setStyleSheet("QCheckBox::indicator { width: 20px; height: 20px; }"); // Custom style for checkbox
+    mainLayout->addWidget(isPriorityTask);
+
+    // Priority - Initially hidden
+    priorityLabel = new QLabel("Priority Level:", this);
+    priorityLabel->setVisible(false);  // Hide initially
     mainLayout->addWidget(priorityLabel);
 
     priorityEdit = new QLineEdit(this);
+    priorityEdit->setVisible(false);  // Hide initially
     mainLayout->addWidget(priorityEdit);
+
+    // Connect checkbox to show/hide priority input fields
+    connect(isPriorityTask, &QCheckBox::toggled, this, [this](bool checked) {
+        priorityLabel->setVisible(checked);  // Show/hide the priority label
+        priorityEdit->setVisible(checked);   // Show/hide the priority input field
+    });
 
     // Buttons
     QHBoxLayout *buttonLayout = new QHBoxLayout();
 
     saveButton = new QPushButton("Save", this);
     buttonLayout->addWidget(saveButton);
-
-    deleteButton = new QPushButton("Delete", this);
-    buttonLayout->addWidget(deleteButton);
 
     mainLayout->addLayout(buttonLayout);
 
@@ -105,17 +115,16 @@ void AddTaskComponent::setupUI()
 void AddTaskComponent::connectSignals()
 {
     connect(saveButton, &QPushButton::clicked, this, &AddTaskComponent::onSaveClicked);
-    connect(deleteButton, &QPushButton::clicked, this, &AddTaskComponent::onDeleteClicked);
 }
 
 
 void AddTaskComponent::addTask(const QDateTime &deadline, const std::string &taskDescription, const int &priority)
 {
     // Create the Task object with deadline, description, and priority
-    Task task = SimpleTask(deadline, taskDescription);
+    Task *task = new SimpleTask(deadline, taskDescription);
 
     if(priority > 0){
-        task = PriorityTaskDecorator(&task, priority);
+        task = new PriorityTaskDecorator(task, priority);
     }
 
     // Save the task using XMLManager
@@ -171,12 +180,6 @@ void AddTaskComponent::onSaveClicked()
 
     addTask(selectedDeadline, taskDescription.toStdString(), priorityInt);
 
-    // Close the component if necessary
-    emit closePopUp();
-}
-
-void AddTaskComponent::onDeleteClicked()
-{
     // Close the component if necessary
     emit closePopUp();
 }

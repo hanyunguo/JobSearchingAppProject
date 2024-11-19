@@ -69,19 +69,21 @@ bool XMLManager::saveJobXML(const Job &job)
     return true;
 }
 
-bool XMLManager::saveTaskXML(const Task &task)
+bool XMLManager::saveTaskXML(Task *task)
 {
     // Read existing tasks
-    std::vector<Task> tasks = readTaskXML();
+    std::vector<Task*> tasks = readTaskXML();
 
     // Remove any existing task with the same description and deadline
-    auto it = std::find_if(tasks.begin(), tasks.end(), [&task](const Task &existingTask) {
-        return existingTask.getTaskDescription() == task.getTaskDescription() &&
-               existingTask.getDeadline() == task.getDeadline();
+    auto it = std::find_if(tasks.begin(), tasks.end(), [task](Task *existingTask) {
+        return existingTask->getTaskDescription() == task->getTaskDescription() &&
+               existingTask->getDeadline() == task->getDeadline();
     });
     if (it != tasks.end()) {
         tasks.erase(it);  // Remove existing task
     }
+
+    qDebug() << "task" << task->getTaskDescription() << "pri" << task->getPriority();
 
     // Add the new or updated task
     tasks.push_back(task);
@@ -99,14 +101,16 @@ bool XMLManager::saveTaskXML(const Task &task)
     xmlWriter.writeStartElement("Tasks");
 
     // Write all tasks to the XML file
-    for (const Task &tk : tasks) {
+    for (Task *tk : tasks) {
         xmlWriter.writeStartElement("Task");
 
         // Write the formatted deadline to XML
-        xmlWriter.writeTextElement("Deadline", tk.getDeadline().toString("yyyy-MM-dd HH:mm:ss"));
-
-        xmlWriter.writeTextElement("TaskDescription", QString::fromStdString(tk.getTaskDescription()));
-        xmlWriter.writeTextElement("Priority", QString::number(tk.getPriority()));
+        qDebug() << "tk.getDeadline()" << tk->getDeadline();
+        qDebug() << "tk.getTaskDescription()" << tk->getTaskDescription();
+        qDebug() << "tk.getPriority()" << tk->getPriority();
+        xmlWriter.writeTextElement("Deadline", tk->getDeadline().toString("yyyy-MM-dd HH:mm:ss"));
+        xmlWriter.writeTextElement("TaskDescription", QString::fromStdString(tk->getTaskDescription()));
+        xmlWriter.writeTextElement("Priority", QString::number(tk->getPriority()));
 
         xmlWriter.writeEndElement();  // End Task
     }
@@ -264,7 +268,7 @@ std::vector<Schedule> XMLManager::readScheduleXML()
                         {
                             schedule.setCompleted(xmlReader.readElementText() == "true");
                         }
-                        else if (xmlReader.name() == "Task")
+                        else if (xmlReader.name() == "TaskName")
                         {
                             schedule.setTask(xmlReader.readElementText().toStdString());
                         }
@@ -347,9 +351,9 @@ std::vector<Job> XMLManager::readJobXML()
 }
 
 // Read all Tasks from XML
-std::vector<Task> XMLManager::readTaskXML()
+std::vector<Task*> XMLManager::readTaskXML()
 {
-    std::vector<Task> tasks;
+    std::vector<Task*> tasks;
 
     // Open the XML file
     QFile file("tasks.xml");
@@ -369,7 +373,7 @@ std::vector<Task> XMLManager::readTaskXML()
         {
             if (xmlReader.name() == "Task")
             {
-                SimpleTask task;
+                Task *task = new SimpleTask();
                 while (!(xmlReader.tokenType() == QXmlStreamReader::EndElement && xmlReader.name() == "Task"))
                 {
                     if (xmlReader.tokenType() == QXmlStreamReader::StartElement)
@@ -381,16 +385,18 @@ std::vector<Task> XMLManager::readTaskXML()
 
                             // Convert the string to QDateTime (assuming the format matches)
                             QDateTime dateTime = QDateTime::fromString(deadlineString, "yyyy-MM-dd HH:mm:ss");
-
-                            task.setDeadline(dateTime);
+                            task->setDeadline(dateTime);
                         }
                         else if (xmlReader.name() == "TaskDescription")
                         {
-                            task.setTaskDescription(xmlReader.readElementText().toStdString());
+                            task->setTaskDescription(xmlReader.readElementText().toStdString());
                         }
                         else if (xmlReader.name() == "Priority")
                         {
-                            task.setPriority(xmlReader.readElementText().toInt());
+                            int p = xmlReader.readElementText().toInt();
+                            if(p > 0){
+                                task = new PriorityTaskDecorator(task, p);
+                            }
                         }
                     }
                     xmlReader.readNext();

@@ -27,19 +27,19 @@ void AddScheduleComponent::setupUI()
     timeslotLabel->setText(QString("Timeslot: %1 %2:00").arg(date.toString("yyyy-MM-dd")).arg(hour));
     mainLayout->addWidget(timeslotLabel);
 
-    // Description
-    QLabel *descriptionLabel = new QLabel("Description:", this);
-    mainLayout->addWidget(descriptionLabel);
-
-    descriptionEdit = new QLineEdit(this);
-    mainLayout->addWidget(descriptionEdit);
-
     // Task
     QLabel *taskLabel = new QLabel("Task:", this);
     mainLayout->addWidget(taskLabel);
 
     taskEdit = new QLineEdit(this);
     mainLayout->addWidget(taskEdit);
+
+    // Description
+    QLabel *descriptionLabel = new QLabel("Description:", this);
+    mainLayout->addWidget(descriptionLabel);
+
+    descriptionEdit = new QLineEdit(this);
+    mainLayout->addWidget(descriptionEdit);
 
     // Completed Checkbox
     completedCheck = new QCheckBox("Completed", this);
@@ -87,8 +87,7 @@ void AddScheduleComponent::connectSignals()
 // }
 
 void AddScheduleComponent::addSchedule(const QDate &date, int hour, const std::string &task, const std::string &description, bool complete)
-{
-    // Create a new Schedule object
+{    // Create a new Schedule object
     QDateTime dateTime(date, QTime(hour, 0));
     time_t timeslot = dateTime.toSecsSinceEpoch();
     Schedule schedule(timeslot, task, description, complete);
