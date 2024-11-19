@@ -4,6 +4,7 @@
 #include <QVBoxLayout>
 #include <QDateTime>
 #include <QDialog>
+#include <QScrollArea>
 
 
 DailyPlannerComponent::DailyPlannerComponent(QWidget *parent)
@@ -56,23 +57,61 @@ void DailyPlannerComponent::setupUI()
     dateLabel = new QLabel(scheduleDate.toString("yyyy-MM-dd"), this);
     mainLayout->addWidget(dateLabel);
 
-    // Create buttons for each time slot
-    for (int i = 0; i < 24; ++i)
-    {
-        int hour = (9 + i) % 24; // Start from 9:00
+    // Create a container for the timeslot buttons
+    QWidget *timeslotContainer = new QWidget(this);
+    QVBoxLayout *timeslotLayout = new QVBoxLayout(timeslotContainer);
 
-        QString timeText = QString("%1:00").arg(hour, 2, 10, QChar('0'));
+    // Create buttons for each time slot from 9:00 to 15:00
+    for (int i = 9; i < 16; ++i) // 9:00 to 15:00 (8 slots)
+    {
+        QString timeText = QString("%1:00").arg(i, 2, 10, QChar('0'));
         QPushButton *button = new QPushButton(timeText, this);
 
-        timeSlotButtons[hour] = button;
+        timeSlotButtons[i] = button;
 
-        connect(button, &QPushButton::clicked, [this, hour]() {
-            emit handleTimeslotClicked(hour);
+        connect(button, &QPushButton::clicked, [this, i]() {
+            emit handleTimeslotClicked(i);
         });
 
-        mainLayout->addWidget(button);
+        timeslotLayout->addWidget(button);
     }
 
+    // Create a QScrollArea to allow scrolling for the remaining timeslots (16:00 to 8:00)
+    QScrollArea *scrollArea = new QScrollArea(this);
+    scrollArea->setWidget(timeslotContainer);
+    scrollArea->setWidgetResizable(true);
+
+    // Create buttons for timeslots from 16:00 to 8:00
+    for (int i = 16; i < 24; ++i) // 16:00 to 23:00
+    {
+        QString timeText = QString("%1:00").arg(i, 2, 10, QChar('0'));
+        QPushButton *button = new QPushButton(timeText, this);
+
+        timeSlotButtons[i] = button;
+
+        connect(button, &QPushButton::clicked, [this, i]() {
+            emit handleTimeslotClicked(i);
+        });
+
+        timeslotLayout->addWidget(button);
+    }
+
+    // Add a section for 00:00 to 8:00 slots outside of the visible area
+    for (int i = 0; i < 9; ++i) // 00:00 to 08:00
+    {
+        QString timeText = QString("%1:00").arg(i, 2, 10, QChar('0'));
+        QPushButton *button = new QPushButton(timeText, this);
+
+        timeSlotButtons[i] = button;
+
+        connect(button, &QPushButton::clicked, [this, i]() {
+            emit handleTimeslotClicked(i);
+        });
+
+        timeslotLayout->addWidget(button);
+    }
+
+    mainLayout->addWidget(scrollArea);
     setLayout(mainLayout);
 }
 

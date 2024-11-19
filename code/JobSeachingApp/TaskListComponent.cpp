@@ -19,6 +19,14 @@ void TaskListComponent::setupUI(){
 
     // Button to add new task
     addTaskButton = new QPushButton("Add New Task", this);
+    addTaskButton->setStyleSheet("QPushButton {"
+                                "background-color: #4CAF50;"
+                                "color: white;"
+                                "font-size: 14px;"
+                                "border-radius: 5px;"
+                                "padding: 10px;"
+                                "}");
+    addTaskButton->setCursor(Qt::PointingHandCursor);
     mainLayout->addWidget(addTaskButton, Qt::AlignTop, Qt::AlignRight);
     mainLayout->setSpacing(10);
 

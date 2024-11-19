@@ -18,17 +18,18 @@ AddTaskComponent::AddTaskComponent(QWidget *parent)
     setupUI();
     connectSignals();
 }
-
 void AddTaskComponent::setupUI()
 {
     QVBoxLayout *mainLayout = new QVBoxLayout(this);
 
     // Deadline Label
     QLabel *deadlineLabel = new QLabel("Deadline:", this);
+    deadlineLabel->setStyleSheet("color: #333333; font-size: 14px; font-weight: bold;");
     mainLayout->addWidget(deadlineLabel);
 
     // Create the button to open the calendar
     QPushButton *calendarButton = new QPushButton("Select Deadline", this);
+    calendarButton->setStyleSheet("background-color: #F2F2F2; color: #333333; border: 1px solid #B0B0B0; border-radius: 5px; padding: 8px 15px; font-size: 14px;");
     mainLayout->addWidget(calendarButton);
 
     // Create the calendar widget but hide it initially
@@ -36,15 +37,18 @@ void AddTaskComponent::setupUI()
     calendarWidget->setGridVisible(true);
     calendarWidget->setVerticalHeaderFormat(QCalendarWidget::NoVerticalHeader);
     calendarWidget->hide(); // Initially hidden
+
     mainLayout->addWidget(calendarWidget);
 
     // Create QTimeEdit widget for time selection
     QTimeEdit *timeEdit = new QTimeEdit(this);
-    timeEdit->setDisplayFormat("HH:mm:ss");  // Set the format for time
+    timeEdit->setDisplayFormat("HH:mm:ss");
+    timeEdit->setStyleSheet("background-color: #F2F2F2; color: #333333; border: 1px solid #B0B0B0; border-radius: 5px; padding: 8px;");
     mainLayout->addWidget(timeEdit);
 
     // Label to show the selected date
     selectedDateLabel = new QLabel("Selected Deadline: None", this);
+    selectedDateLabel->setStyleSheet("background-color: #4CAF50; color: white;font-size: 14px;/*color: #4CAF50; font-size: 14px; font-weight: bold;*/");
     mainLayout->addWidget(selectedDateLabel);
 
     // Handle the button click to show the calendar
@@ -76,22 +80,26 @@ void AddTaskComponent::setupUI()
 
     // Task Description
     QLabel *taskDescriptionLabel = new QLabel("Task Description:", this);
+    taskDescriptionLabel->setStyleSheet("color: #333333; font-size: 14px; font-weight: bold;");
     mainLayout->addWidget(taskDescriptionLabel);
 
     taskDescriptionEdit = new QLineEdit(this);
+    taskDescriptionEdit->setStyleSheet("background-color: #F2F2F2; color: #333333; border: 1px solid #B0B0B0; border-radius: 5px; padding: 8px;");
     mainLayout->addWidget(taskDescriptionEdit);
 
     // Completed Checkbox
     isPriorityTask = new QCheckBox("Is this a Priority Task?", this);
-    isPriorityTask->setStyleSheet("QCheckBox::indicator { width: 20px; height: 20px; }"); // Custom style for checkbox
+    isPriorityTask->setStyleSheet("QCheckBox::indicator { width: 20px; height: 20px; }");
     mainLayout->addWidget(isPriorityTask);
 
     // Priority - Initially hidden
     priorityLabel = new QLabel("Priority Level:", this);
+    priorityLabel->setStyleSheet("color: #333333; font-size: 14px; font-weight: bold;");
     priorityLabel->setVisible(false);  // Hide initially
     mainLayout->addWidget(priorityLabel);
 
     priorityEdit = new QLineEdit(this);
+    priorityEdit->setStyleSheet("background-color: #F2F2F2; color: #333333; border: 1px solid #B0B0B0; border-radius: 5px; padding: 8px;");
     priorityEdit->setVisible(false);  // Hide initially
     mainLayout->addWidget(priorityEdit);
 
@@ -101,14 +109,17 @@ void AddTaskComponent::setupUI()
         priorityEdit->setVisible(checked);   // Show/hide the priority input field
     });
 
-    // Buttons
+    // Buttons Layout
     QHBoxLayout *buttonLayout = new QHBoxLayout();
 
     saveButton = new QPushButton("Save", this);
+    saveButton->setStyleSheet("background-color: #B0B0B0; color: white; border-radius: 5px; padding: 8px 15px; font-size: 14px;");
+    saveButton->setFixedWidth(100);  // Fixed width for consistency
     buttonLayout->addWidget(saveButton);
 
     mainLayout->addLayout(buttonLayout);
 
+    // Set the layout for the component
     setLayout(mainLayout);
 }
 

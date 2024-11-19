@@ -20,42 +20,93 @@ AddScheduleComponent::AddScheduleComponent(const QDate &date, int hour, QWidget 
 
 void AddScheduleComponent::setupUI()
 {
+    // QVBoxLayout *mainLayout = new QVBoxLayout(this);
+
+    // // Timeslot Label
+    // timeslotLabel = new QLabel(this);
+    // timeslotLabel->setText(QString("Timeslot: %1 %2:00").arg(date.toString("yyyy-MM-dd")).arg(hour));
+    // mainLayout->addWidget(timeslotLabel);
+
+    // // Task
+    // QLabel *taskLabel = new QLabel("Task:", this);
+    // mainLayout->addWidget(taskLabel);
+
+    // taskEdit = new QLineEdit(this);
+    // mainLayout->addWidget(taskEdit);
+
+    // // Description
+    // QLabel *descriptionLabel = new QLabel("Description:", this);
+    // mainLayout->addWidget(descriptionLabel);
+
+    // descriptionEdit = new QLineEdit(this);
+    // mainLayout->addWidget(descriptionEdit);
+
+    // // Completed Checkbox
+    // completedCheck = new QCheckBox("Completed", this);
+    // mainLayout->addWidget(completedCheck);
+
+    // // Buttons
+    // QHBoxLayout *buttonLayout = new QHBoxLayout();
+
+    // saveButton = new QPushButton("Save", this);
+    // buttonLayout->addWidget(saveButton);
+
+    // deleteButton = new QPushButton("Delete", this);
+    // buttonLayout->addWidget(deleteButton);
+
+    // mainLayout->addLayout(buttonLayout);
+
+    // setLayout(mainLayout);
+
     QVBoxLayout *mainLayout = new QVBoxLayout(this);
 
-    // Timeslot Label
+    // Timeslot Label (No border styling for this label, just clear text)
     timeslotLabel = new QLabel(this);
     timeslotLabel->setText(QString("Timeslot: %1 %2:00").arg(date.toString("yyyy-MM-dd")).arg(hour));
+    timeslotLabel->setStyleSheet("color: #333333; font-size: 16px; font-weight: bold;");
     mainLayout->addWidget(timeslotLabel);
 
-    // Task
+    // Task Label
     QLabel *taskLabel = new QLabel("Task:", this);
+    taskLabel->setStyleSheet("color: #333333; font-size: 14px;");
     mainLayout->addWidget(taskLabel);
 
+    // Task Input Field
     taskEdit = new QLineEdit(this);
+    taskEdit->setStyleSheet("background-color: #F2F2F2; color: #333333; border: 1px solid #B0B0B0; border-radius: 5px; padding: 8px;");
     mainLayout->addWidget(taskEdit);
 
-    // Description
+    // Description Label
     QLabel *descriptionLabel = new QLabel("Description:", this);
+    descriptionLabel->setStyleSheet("color: #333333; font-size: 14px;");
     mainLayout->addWidget(descriptionLabel);
 
+    // Description Input Field
     descriptionEdit = new QLineEdit(this);
+    descriptionEdit->setStyleSheet("background-color: #F2F2F2; color: #333333; border: 1px solid #B0B0B0; border-radius: 5px; padding: 8px;");
     mainLayout->addWidget(descriptionEdit);
 
     // Completed Checkbox
     completedCheck = new QCheckBox("Completed", this);
+    completedCheck->setStyleSheet("color: #333333; font-size: 14px;");
     mainLayout->addWidget(completedCheck);
 
     // Buttons
     QHBoxLayout *buttonLayout = new QHBoxLayout();
 
     saveButton = new QPushButton("Save", this);
+    saveButton->setStyleSheet("background-color: #B0B0B0; color: white; border-radius: 5px; padding: 8px 15px; font-size: 14px;");
+    saveButton->setFixedWidth(100);
     buttonLayout->addWidget(saveButton);
 
     deleteButton = new QPushButton("Delete", this);
+    deleteButton->setStyleSheet("background-color: #D0D0D0; color: white; border-radius: 5px; padding: 8px 15px; font-size: 14px;");
+    deleteButton->setFixedWidth(100);
     buttonLayout->addWidget(deleteButton);
 
     mainLayout->addLayout(buttonLayout);
 
+    // Set the main layout
     setLayout(mainLayout);
 }
 

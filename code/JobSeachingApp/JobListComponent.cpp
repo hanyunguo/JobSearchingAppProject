@@ -19,6 +19,14 @@ void JobListComponent::setupUI()
 
     // Button to add new job
     addJobButton = new QPushButton("Add New Job Application", this);
+    addJobButton->setStyleSheet("QPushButton {"
+                                "background-color: #4CAF50;"
+                                "color: white;"
+                                "font-size: 14px;"
+                                "border-radius: 5px;"
+                                "padding: 10px;"
+                                "}");
+    addJobButton->setCursor(Qt::PointingHandCursor);
     mainLayout->addWidget(addJobButton, Qt::AlignTop, Qt::AlignRight);
     mainLayout->setSpacing(10);
 

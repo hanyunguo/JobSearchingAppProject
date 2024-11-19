@@ -83,8 +83,6 @@ bool XMLManager::saveTaskXML(Task *task)
         tasks.erase(it);  // Remove existing task
     }
 
-    qDebug() << "task" << task->getTaskDescription() << "pri" << task->getPriority();
-
     // Add the new or updated task
     tasks.push_back(task);
 
@@ -105,9 +103,6 @@ bool XMLManager::saveTaskXML(Task *task)
         xmlWriter.writeStartElement("Task");
 
         // Write the formatted deadline to XML
-        qDebug() << "tk.getDeadline()" << tk->getDeadline();
-        qDebug() << "tk.getTaskDescription()" << tk->getTaskDescription();
-        qDebug() << "tk.getPriority()" << tk->getPriority();
         xmlWriter.writeTextElement("Deadline", tk->getDeadline().toString("yyyy-MM-dd HH:mm:ss"));
         xmlWriter.writeTextElement("TaskDescription", QString::fromStdString(tk->getTaskDescription()));
         xmlWriter.writeTextElement("Priority", QString::number(tk->getPriority()));
