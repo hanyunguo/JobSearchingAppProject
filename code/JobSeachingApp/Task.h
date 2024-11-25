@@ -18,7 +18,6 @@ public:
     virtual void setDeadline(QDateTime deadline){}
     virtual void setTaskDescription(const std::string taskDescription){}
     virtual void setPriority(int priority){}
-
 };
 
 #endif // TASK_H

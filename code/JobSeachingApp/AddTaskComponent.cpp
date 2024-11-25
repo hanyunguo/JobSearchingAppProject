@@ -162,20 +162,6 @@ void AddTaskComponent::editTask(const QDateTime &deadline, const std::string &ta
     emit taskUpdated();
 }
 
-void AddTaskComponent::deleteTask(const Task &task)
-{
-    // Delete the task using XMLManager
-    // XMLManager::getInstance().deletetaskXML(task);
-
-    // Clear the current task
-    // currentTask = Task();
-
-    // Emit the signal to notify that the task has been updated
-    emit taskUpdated();
-
-    close();
-}
-
 void AddTaskComponent::onSaveClicked()
 {
     // Ensure selectedDeadline is set before accessing it

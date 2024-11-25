@@ -6,8 +6,8 @@
 class SidebarComponentFactory
 {
 public:
-    virtual ~SidebarComponentFactory() {}
     virtual SidebarComponent* createSidebar(QWidget *parent = nullptr) = 0;
+    virtual ~SidebarComponentFactory() {}
 };
 
 #endif // SIDEBARCOMPONENTFACTORY_H

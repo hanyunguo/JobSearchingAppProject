@@ -61,11 +61,6 @@ void AddJobComponent::setupUI()
     saveButton->setFixedWidth(100);  // Fixed width for consistency
     buttonLayout->addWidget(saveButton);
 
-    deleteButton = new QPushButton("Delete", this);
-    deleteButton->setStyleSheet("background-color: #D0D0D0; color: white; border-radius: 5px; padding: 8px 15px; font-size: 14px;");
-    deleteButton->setFixedWidth(100);
-    buttonLayout->addWidget(deleteButton);
-
     // Add button layout to the main layout
     mainLayout->addLayout(buttonLayout);
 
@@ -76,7 +71,6 @@ void AddJobComponent::setupUI()
 void AddJobComponent::connectSignals()
 {
     connect(saveButton, &QPushButton::clicked, this, &AddJobComponent::onSaveClicked);
-    connect(deleteButton, &QPushButton::clicked, this, &AddJobComponent::onDeleteClicked);
 }
 
 
@@ -108,20 +102,6 @@ void AddJobComponent::editJob(const std::string &jobTitle, const std::string &co
     emit jobUpdated();
 }
 
-void AddJobComponent::deleteJob(const Job &job)
-{
-    // Delete the job using XMLManager
-    // XMLManager::getInstance().deleteJobXML(job);
-
-    // Clear the current job
-    currentJob = Job();
-
-    // Emit the signal to notify that the job has been updated
-    emit jobUpdated();
-
-    close();
-}
-
 void AddJobComponent::onSaveClicked()
 {
     // Get input values from UI elements
@@ -139,18 +119,6 @@ void AddJobComponent::onSaveClicked()
     {
         // Editing an existing job
         editJob(jobTitle.toStdString(), companyName.toStdString(), applicationLink.toStdString(), jobDescription.toStdString());
-    }
-
-    // Close the component if necessary
-    emit closePopUp();
-}
-
-void AddJobComponent::onDeleteClicked()
-{
-    if (!currentJob.getJobTitle().empty())
-    {
-        // Delete the current job
-        // deleteJob(currentJob);
     }
 
     // Close the component if necessary

@@ -20,6 +20,7 @@ private slots:
 
 private:
     CalendarViewComponent *calendarViewComponent;
+    SidebarComponent *sidebar;
 
 signals:
     // Signal emitted when a page change is requested

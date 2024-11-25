@@ -17,7 +17,6 @@ public:
     explicit AddTaskComponent(QWidget *parent = nullptr);
     void addTask(const QDateTime &deadline, const std::string &taskDescription, const int &priority);
     void editTask(const QDateTime &deadline, const std::string &taskDescription, const int &priority);
-    void deleteTask(const Task &task);
 
 signals:
     void taskUpdated();

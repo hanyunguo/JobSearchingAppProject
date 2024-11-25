@@ -25,7 +25,6 @@ void Page::resizeEvent(QResizeEvent *event)
     int height = newSize.height();
     if(sidebar) {
         sidebar->setGeometry(0, 0, sidebarWidth, height);
-    }//mainContent->setGeometry(0, 0, newSize.width(), height);
-    // Call base class implementation if necessary
+    }
     QWidget::resizeEvent(event);
 }

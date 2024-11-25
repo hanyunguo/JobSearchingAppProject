@@ -30,12 +30,10 @@ signals:
 
 private slots:
     void onSaveClicked();
-    void onDeleteClicked();
 
 private:
     void setupUI();
     void connectSignals();
-    // void loadSchedule();
 
     // UI elements
     QLabel *timeslotLabel;
@@ -43,7 +41,6 @@ private:
     QLineEdit *taskEdit;
     QCheckBox *completedCheck;
     QPushButton *saveButton;
-    QPushButton *deleteButton;
 
     // Member variables
     Schedule currentSchedule;
