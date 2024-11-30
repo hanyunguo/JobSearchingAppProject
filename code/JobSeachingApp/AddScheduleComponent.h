@@ -5,6 +5,7 @@
 #include <QDate>
 
 #include "Schedule.h"
+#include "AddScheduleCommand.h"
 
 class QLineEdit;
 class QPushButton;
@@ -21,9 +22,6 @@ public:
 
     // Methods to add, delete, and edit schedules
     void addSchedule(const QDate &date, int hour, const std::string &task, const std::string &description, bool complete);
-    // void deleteSchedule(const Schedule &schedule);
-    void editSchedule(const QDate &date, int hour, const std::string &task, const std::string &description, bool complete);
-
 signals:
     void scheduleUpdated(); // Signal emitted when a schedule is added, edited, or deleted
     void closePopUp();

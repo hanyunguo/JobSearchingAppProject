@@ -3,6 +3,7 @@
 
 #include <QWidget>
 #include "Job.h"
+#include "AddJobCommand.h"
 
 class QLineEdit;
 class QPushButton;
@@ -13,7 +14,6 @@ class AddJobComponent : public QWidget
 public:
     explicit AddJobComponent(QWidget *parent = nullptr);
     void addJob(const std::string &jobTitle, const std::string &companyName, const std::string &applicationLink, const std::string &jobDescription);
-    void editJob(const std::string &jobTitle, const std::string &companyName, const std::string &applicationLink, const std::string &jobDescription);
 signals:
     void jobUpdated();
     void closePopUp();

@@ -78,8 +78,8 @@ void AddScheduleComponent::addSchedule(const QDate &date, int hour, const std::s
     time_t timeslot = dateTime.toSecsSinceEpoch();
     Schedule schedule(timeslot, task, description, complete);
 
-    // Save the schedule using XMLManager
-    XMLManager::getInstance().saveScheduleXML(schedule);
+    AddScheduleCommand* addCommand = new AddScheduleCommand(schedule);
+    addCommand->execute();
 
     // Update the current schedule
     currentSchedule = schedule;
@@ -87,25 +87,6 @@ void AddScheduleComponent::addSchedule(const QDate &date, int hour, const std::s
     // Emit the signal to notify that the schedule has been updated
     emit scheduleUpdated();
 }
-
-void AddScheduleComponent::editSchedule(const QDate &date, int hour, const std::string &task, const std::string &description, bool complete)
-{
-    // Update the current Schedule object
-    QDateTime dateTime(date, QTime(hour, 0));
-    time_t timeslot = dateTime.toSecsSinceEpoch();
-
-    currentSchedule.setTimeslot(timeslot);
-    currentSchedule.setTask(task);
-    currentSchedule.setDescription(description);
-    currentSchedule.setCompleted(complete);
-
-    // Save the updated schedule using XMLManager
-    XMLManager::getInstance().saveScheduleXML(currentSchedule);
-
-    // Emit the signal to notify that the schedule has been updated
-    emit scheduleUpdated();
-}
-
 void AddScheduleComponent::onSaveClicked()
 {
     // Get input values from UI elements
@@ -119,12 +100,6 @@ void AddScheduleComponent::onSaveClicked()
         // Adding a new schedule
         addSchedule(date, hour, taskName.toStdString(), description.toStdString(), completed);
     }
-    else
-    {
-        // Editing an existing schedule
-        editSchedule(date, hour, taskName.toStdString(), description.toStdString(), completed);
-    }
-
     // Close the component if necessary
     emit closePopUp();
 }

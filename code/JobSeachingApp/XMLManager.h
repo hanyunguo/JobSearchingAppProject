@@ -30,10 +30,6 @@ private:
     // Constructor
     XMLManager();
 
-    // Disallow copying
-    // XMLManager(const XMLManager&) = delete;
-    // XMLManager& operator=(const XMLManager&) = delete;
-
     // Instance variables
     static XMLManager xmlManager;
 };

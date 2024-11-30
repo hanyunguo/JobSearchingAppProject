@@ -139,24 +139,12 @@ void AddTaskComponent::addTask(const QDateTime &deadline, const std::string &tas
     }
 
     // Save the task using XMLManager
-    XMLManager::getInstance().saveTaskXML(task);
+    // XMLManager::getInstance().saveTaskXML(task);
+    AddTaskCommand* taskCommand = new AddTaskCommand(task);
+    taskCommand->execute();
 
     // Update the current task
     currentTask = task;
-
-    // Emit the signal to notify that the task has been updated
-    emit taskUpdated();
-}
-
-void AddTaskComponent::editTask(const QDateTime &deadline, const std::string &taskDescription, const int &priority)
-{
-    // Update the current task
-    // currentTask.setDeadline(deadline);
-    // currentTask.setTaskDescription(taskDescription);
-    // currentTask.setPriority(priority);
-
-    // Save the updated task using XMLManager
-    // XMLManager::getInstance().saveTaskXML(currentTask);
 
     // Emit the signal to notify that the task has been updated
     emit taskUpdated();

@@ -77,26 +77,12 @@ void AddJobComponent::connectSignals()
 void AddJobComponent::addJob(const std::string &jobTitle, const std::string &companyName, const std::string &applicationLink, const std::string &jobDescription)
 {
     Job job(jobTitle, companyName, applicationLink, jobDescription);
-    // Save the job using XMLManager
-    XMLManager::getInstance().saveJobXML(job);
+
+    AddJobCommand* jobCommand = new AddJobCommand(job);
+    jobCommand->execute();
 
     // Update the current job
     currentJob = job;
-
-    // Emit the signal to notify that the job has been updated
-    emit jobUpdated();
-}
-
-void AddJobComponent::editJob(const std::string &jobTitle, const std::string &companyName, const std::string &applicationLink, const std::string &jobDescription)
-{
-    // Update the current job
-    currentJob.setJobTitle(jobTitle);
-    currentJob.setCompanyName(companyName);
-    currentJob.setApplicationLink(applicationLink);
-    currentJob.setJobDescription(jobDescription);
-
-    // Save the updated job using XMLManager
-    XMLManager::getInstance().saveJobXML(currentJob);
 
     // Emit the signal to notify that the job has been updated
     emit jobUpdated();
@@ -114,11 +100,6 @@ void AddJobComponent::onSaveClicked()
     {
         // Adding a new job
         addJob(jobTitle.toStdString(), companyName.toStdString(), applicationLink.toStdString(), jobDescription.toStdString());
-    }
-    else
-    {
-        // Editing an existing job
-        editJob(jobTitle.toStdString(), companyName.toStdString(), applicationLink.toStdString(), jobDescription.toStdString());
     }
 
     // Close the component if necessary

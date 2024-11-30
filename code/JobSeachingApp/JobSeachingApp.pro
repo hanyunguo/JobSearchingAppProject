@@ -9,8 +9,11 @@ CONFIG += c++17
 #DEFINES += QT_DISABLE_DEPRECATED_BEFORE=0x060000    # disables all the APIs deprecated before Qt 6.0.0
 
 SOURCES += \
+    AddJobCommand.cpp \
     AddJobComponent.cpp \
+    AddScheduleCommand.cpp \
     AddScheduleComponent.cpp \
+    AddTaskCommand.cpp \
     AddTaskComponent.cpp \
     CalendarPage.cpp \
     CalendarPageSidebar.cpp \
@@ -35,13 +38,17 @@ SOURCES += \
     mainwindow.cpp
 
 HEADERS += \
+    AddJobCommand.h \
     AddJobComponent.h \
+    AddScheduleCommand.h \
     AddScheduleComponent.h \
+    AddTaskCommand.h \
     AddTaskComponent.h \
     CalendarPage.h \
     CalendarPageSidebar.h \
     CalendarPageSidebarFactory.h \
     CalendarViewComponent.h \
+    Command.h \
     DailyPlannerComponent.h \
     DailyPlannerPage.h \
     DailyPlannerPageSidebar.h \

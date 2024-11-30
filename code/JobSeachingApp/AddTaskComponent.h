@@ -9,6 +9,7 @@
 #include <QCheckBox>
 
 #include "Task.h"
+#include "AddTaskCommand.h"
 
 class AddTaskComponent : public QWidget
 {
@@ -16,8 +17,6 @@ class AddTaskComponent : public QWidget
 public:
     explicit AddTaskComponent(QWidget *parent = nullptr);
     void addTask(const QDateTime &deadline, const std::string &taskDescription, const int &priority);
-    void editTask(const QDateTime &deadline, const std::string &taskDescription, const int &priority);
-
 signals:
     void taskUpdated();
     void closePopUp();
