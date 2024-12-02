@@ -19,12 +19,18 @@ public:
     bool saveJobXML(const Job &job);
     bool saveTaskXML(Task *task);
     bool saveScheduleXML(const Schedule &schedule);
-    bool deleteScheduleXML(const Schedule &schedule);
+
     bool deleteJobXML(const Job &job);
-    bool deleteTaskXML(const Task &task);
+    bool deleteTaskXML(Task* task);
+    bool deleteScheduleXML(const Schedule &schedule);
+
     std::vector<Job> readJobXML();
     std::vector<Schedule> readScheduleXML();
     std::vector<Task*> readTaskXML();
+
+    void editJobXML(const Job &oldJob, const Job &updatedJob);
+    void editTaskXML(Task* oldTask, Task* updatedTask);
+    void editScheduleXML(const Schedule &oldschedule, Schedule &newschedule);
 
 private:
     // Constructor

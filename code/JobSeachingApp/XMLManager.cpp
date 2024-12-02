@@ -167,13 +167,65 @@ bool XMLManager::saveScheduleXML(const Schedule &schedule)
     return true;
 }
 
+bool XMLManager::deleteJobXML(const Job &job)
+{
+    // Read all jobs from the XML
+    std::vector<Job> jobs = readJobXML();
+
+    // Find and remove the job that matches the provided job
+    auto it = std::remove_if(jobs.begin(), jobs.end(), [&job](const Job &jb) {
+        return jb.getJobTitle() == job.getJobTitle() &&
+               jb.getCompanyName() == job.getCompanyName() &&
+               jb.getApplicationLink() == job.getApplicationLink();
+    });
+
+    // If the job was found and removed, `it` will be valid and we can erase it
+    if (it != jobs.end())
+    {
+        jobs.erase(it, jobs.end());  // Remove the job from the vector
+
+        // Open the file for writing (overwrite)
+        QFile file("jobs.xml");
+        if (!file.open(QIODevice::WriteOnly | QIODevice::Text))
+        {
+            qDebug() << "Error opening file for writing.";
+            return false;
+        }
+
+        QXmlStreamWriter xmlWriter(&file);
+        xmlWriter.setAutoFormatting(true);
+        xmlWriter.writeStartDocument();
+        xmlWriter.writeStartElement("Jobs");
+
+        // Write all remaining jobs back to the XML file
+        for (const Job &jb : jobs)
+        {
+            xmlWriter.writeStartElement("Job");
+            xmlWriter.writeTextElement("JobTitle", QString::fromStdString(jb.getJobTitle()));
+            xmlWriter.writeTextElement("CompanyName", QString::fromStdString(jb.getCompanyName()));
+            xmlWriter.writeTextElement("ApplicationLink", QString::fromStdString(jb.getApplicationLink()));
+            xmlWriter.writeTextElement("JobDescription", QString::fromStdString(jb.getJobDescription()));
+            xmlWriter.writeEndElement(); // End Job
+        }
+
+        xmlWriter.writeEndElement(); // End Jobs
+        xmlWriter.writeEndDocument();
+
+        file.close();
+        return true;
+    }
+    else
+    {
+        qDebug() << "Job not found!";
+        return false;
+    }
+}
+
 // Delete a Schedule from XML
 bool XMLManager::deleteScheduleXML(const Schedule &schedule)
 {
-    // Read existing schedules
     std::vector<Schedule> schedules = readScheduleXML();
 
-    // Remove the schedule with the specified timeslot
     bool found = false;
     for (auto it = schedules.begin(); it != schedules.end(); ++it)
     {
@@ -187,15 +239,13 @@ bool XMLManager::deleteScheduleXML(const Schedule &schedule)
 
     if (!found)
     {
-        // Schedule not found
-        return false;
+        return false;  // Schedule not found
     }
 
-    // Open the file for writing (overwrite)
+    // Save the updated schedules to the XML file
     QFile file("schedules.xml");
     if (!file.open(QIODevice::WriteOnly | QIODevice::Text))
     {
-        // Error opening file for writing
         return false;
     }
 
@@ -204,16 +254,14 @@ bool XMLManager::deleteScheduleXML(const Schedule &schedule)
     xmlWriter.writeStartDocument();
     xmlWriter.writeStartElement("Schedules");
 
-    // Write remaining schedules to the XML file
     for (const Schedule &sched : schedules)
     {
         xmlWriter.writeStartElement("Schedule");
         xmlWriter.writeTextElement("Timeslot", QString::number(sched.getTimeslot()));
-        xmlWriter.writeTextElement("Description", QString::fromStdString(sched.getTask()));
+        xmlWriter.writeTextElement("TaskName", QString::fromStdString(sched.getTask()));
         xmlWriter.writeTextElement("Description", QString::fromStdString(sched.getDescription()));
         xmlWriter.writeTextElement("Completed", sched.isCompleted() ? "true" : "false");
-
-        xmlWriter.writeEndElement(); // End Schedule
+        xmlWriter.writeEndElement();  // End Schedule
     }
 
     xmlWriter.writeEndElement(); // End Schedules
@@ -221,6 +269,61 @@ bool XMLManager::deleteScheduleXML(const Schedule &schedule)
 
     file.close();
     return true;
+}
+
+bool XMLManager::deleteTaskXML(Task* task)
+{
+    // Read all tasks from the XML
+    std::vector<Task*> tasks = readTaskXML();
+
+    // Find and remove the task that matches the provided task
+    auto it = std::remove_if(tasks.begin(), tasks.end(), [task](Task* t) {
+        return t->getTaskDescription() == task->getTaskDescription() &&
+               t->getDeadline() == task->getDeadline();
+    });
+
+    // If the task was found and removed, `it` will be valid, and we can erase it
+    if (it != tasks.end())
+    {
+        tasks.erase(it, tasks.end());  // Remove the task from the vector
+
+        // Open the file for writing (overwrite)
+        QFile file("tasks.xml");
+        if (!file.open(QIODevice::WriteOnly | QIODevice::Text))
+        {
+            qDebug() << "Error opening file for writing.";
+            return false;
+        }
+
+        QXmlStreamWriter xmlWriter(&file);
+        xmlWriter.setAutoFormatting(true);
+        xmlWriter.writeStartDocument();
+        xmlWriter.writeStartElement("Tasks");
+
+        // Write all remaining tasks back to the XML file
+        for (Task* t : tasks)
+        {
+            xmlWriter.writeStartElement("Task");
+
+            // Write the formatted deadline to XML
+            xmlWriter.writeTextElement("Deadline", t->getDeadline().toString("yyyy-MM-dd HH:mm:ss"));
+            xmlWriter.writeTextElement("TaskDescription", QString::fromStdString(t->getTaskDescription()));
+            xmlWriter.writeTextElement("Priority", QString::number(t->getPriority()));
+
+            xmlWriter.writeEndElement();  // End Task
+        }
+
+        xmlWriter.writeEndElement();  // End Tasks
+        xmlWriter.writeEndDocument();
+
+        file.close();
+        return true;
+    }
+    else
+    {
+        qDebug() << "Task not found!";
+        return false;
+    }
 }
 
 // Read all Schedules from XML
@@ -408,4 +511,179 @@ std::vector<Task*> XMLManager::readTaskXML()
 
     file.close();
     return tasks;
+}
+
+void XMLManager::editJobXML(const Job &oldJob, const Job &updatedJob)
+{
+    // Read all jobs from the XML
+    std::vector<Job> jobs = readJobXML();
+
+    // Find the job that needs to be updated
+    bool jobUpdated = false;
+    for (auto &job : jobs)
+    {
+        // Compare the old job details with the job in the XML
+        if (job.getJobTitle() == oldJob.getJobTitle() &&
+            job.getCompanyName() == oldJob.getCompanyName() &&
+            job.getApplicationLink() == oldJob.getApplicationLink())
+        {
+            // Update the job details with the new values
+            job.setJobTitle(updatedJob.getJobTitle());
+            job.setCompanyName(updatedJob.getCompanyName());
+            job.setApplicationLink(updatedJob.getApplicationLink());
+            job.setJobDescription(updatedJob.getJobDescription());
+            jobUpdated = true;
+            break;
+        }
+    }
+
+    // If the job was updated, rewrite the XML file
+    if (jobUpdated)
+    {
+        QFile file("jobs.xml");
+        if (!file.open(QIODevice::WriteOnly | QIODevice::Text))
+        {
+            qDebug() << "Error opening file for writing.";
+            return;
+        }
+
+        QXmlStreamWriter xmlWriter(&file);
+        xmlWriter.setAutoFormatting(true);
+        xmlWriter.writeStartDocument();
+        xmlWriter.writeStartElement("Jobs");
+
+        // Write all jobs back to the XML file
+        for (const Job &job : jobs)
+        {
+            xmlWriter.writeStartElement("Job");
+            xmlWriter.writeTextElement("JobTitle", QString::fromStdString(job.getJobTitle()));
+            xmlWriter.writeTextElement("CompanyName", QString::fromStdString(job.getCompanyName()));
+            xmlWriter.writeTextElement("ApplicationLink", QString::fromStdString(job.getApplicationLink()));
+            xmlWriter.writeTextElement("JobDescription", QString::fromStdString(job.getJobDescription()));
+            xmlWriter.writeEndElement(); // End Job
+        }
+
+        xmlWriter.writeEndElement(); // End Jobs
+        xmlWriter.writeEndDocument();
+
+        file.close();
+    }
+    else
+    {
+        qDebug() << "Job not found!";
+    }
+}
+
+void XMLManager::editTaskXML(Task* oldTask, Task* updatedTask)
+{
+    // Read all tasks from the XML
+    std::vector<Task*> tasks = readTaskXML();
+
+    bool taskUpdated = false;
+
+    // Loop through all tasks to find the one that matches the updated task
+    for (auto &task : tasks)
+    {
+        // Compare task details (description, deadline, priority) to identify the task
+        if (task->getTaskDescription() == oldTask->getTaskDescription() &&
+            task->getDeadline() == oldTask->getDeadline() && task->getPriority() == oldTask->getPriority())
+        {
+            // Update the task fields with the new values
+            task->setTaskDescription(updatedTask->getTaskDescription());
+            if(task->getPriority() == 0 && updatedTask->getPriority() > 0) {
+                task = new PriorityTaskDecorator(task, updatedTask->getPriority());
+            } else {
+                task->setPriority(updatedTask->getPriority());
+            }
+            task->setDeadline(updatedTask->getDeadline());
+            taskUpdated = true;
+            break;
+        }
+    }
+
+    // If the task is found and updated, rewrite the XML file
+    if (taskUpdated)
+    {
+        QFile file("tasks.xml");
+        if (!file.open(QIODevice::WriteOnly | QIODevice::Text))
+        {
+            qDebug() << "Error opening file for writing.";
+            return;
+        }
+
+        QXmlStreamWriter xmlWriter(&file);
+        xmlWriter.setAutoFormatting(true);
+        xmlWriter.writeStartDocument();
+        xmlWriter.writeStartElement("Tasks");
+
+        // Write all tasks back to the XML file
+        for (Task* task : tasks)
+        {
+            xmlWriter.writeStartElement("Task");
+
+            // Write the formatted deadline to XML
+            xmlWriter.writeTextElement("Deadline", task->getDeadline().toString("yyyy-MM-dd HH:mm:ss"));
+            xmlWriter.writeTextElement("TaskDescription", QString::fromStdString(task->getTaskDescription()));
+            xmlWriter.writeTextElement("Priority", QString::number(task->getPriority()));
+
+            xmlWriter.writeEndElement();  // End Task
+        }
+
+        xmlWriter.writeEndElement();  // End Tasks
+        xmlWriter.writeEndDocument();
+
+        file.close();
+    }
+    else
+    {
+        qDebug() << "Task not found!";
+    }
+}
+
+void XMLManager::editScheduleXML(const Schedule &oldSchedule, Schedule &newSchedule)
+{
+    std::vector<Schedule> schedules = readScheduleXML();
+
+    bool found = false;
+    for (auto &sched : schedules)
+    {
+        if (sched.getTimeslot() == oldSchedule.getTimeslot())
+        {
+            sched = newSchedule;
+            found = true;
+            break;
+        }
+    }
+
+    if (!found)
+    {
+        return;  // Schedule not found, no update
+    }
+
+    // Save the updated schedules to the XML file
+    QFile file("schedules.xml");
+    if (!file.open(QIODevice::WriteOnly | QIODevice::Text))
+    {
+        return;
+    }
+
+    QXmlStreamWriter xmlWriter(&file);
+    xmlWriter.setAutoFormatting(true);
+    xmlWriter.writeStartDocument();
+    xmlWriter.writeStartElement("Schedules");
+
+    for (const Schedule &sched : schedules)
+    {
+        xmlWriter.writeStartElement("Schedule");
+        xmlWriter.writeTextElement("Timeslot", QString::number(sched.getTimeslot()));
+        xmlWriter.writeTextElement("TaskName", QString::fromStdString(sched.getTask()));
+        xmlWriter.writeTextElement("Description", QString::fromStdString(sched.getDescription()));
+        xmlWriter.writeTextElement("Completed", sched.isCompleted() ? "true" : "false");
+        xmlWriter.writeEndElement();  // End Schedule
+    }
+
+    xmlWriter.writeEndElement(); // End Schedules
+    xmlWriter.writeEndDocument();
+
+    file.close();
 }

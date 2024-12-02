@@ -6,6 +6,14 @@
 #include <QPushButton>
 #include <QVBoxLayout>
 #include <vector>
+#include <QVBoxLayout>
+#include <QHBoxLayout>
+#include <QLineEdit>
+#include <QPushButton>
+#include <QLabel>
+#include <QCalendarWidget>
+#include <QDateTime>
+#include <QTimeEdit>
 
 #include "Task.h"
 
@@ -18,6 +26,8 @@ public:
 public slots:
     void onAddTaskClicked();
     void updateTaskList();
+    void onEditTaskClicked(Task* oldtask);
+    void onDeleteTaskClicked(Task* task);
 
 private:
     void setupUI();
@@ -25,6 +35,8 @@ private:
     QTableWidget *taskTable;
     QPushButton *addTaskButton;
     std::vector<Task*> taskList;
+    QLineEdit *priorityEdit;
+    QLabel *priorityLabel;
 };
 
 #endif // TASKLISTCOMPONENT_H

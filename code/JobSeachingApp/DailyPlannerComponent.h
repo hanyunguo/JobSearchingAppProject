@@ -7,6 +7,8 @@
 #include <QMap>
 #include <QPushButton>
 #include <QLabel>
+#include <QLineEdit>
+#include <QCheckBox>
 
 #include "Schedule.h"
 
@@ -25,6 +27,8 @@ signals:
 
 public slots:
     void updateSchedules();
+    void onEditScheduleClicked(int hour);
+    void onDeleteScheduleClicked(int hour);
 
 private:
     void setupUI();
@@ -32,8 +36,10 @@ private:
     void handleTimeslotClicked(int hour);
 
     QDate scheduleDate;
-    std::vector<Schedule> schedules;           // Use std::vector as per your design
+    std::vector<Schedule> schedules;
     QMap<int, QPushButton*> timeSlotButtons;   // Key: hour, Value: button
+    QMap<int, QPushButton*> editButtons;
+    QMap<int, QPushButton*> deleteButtons;
     QLabel *dateLabel;
 };
 

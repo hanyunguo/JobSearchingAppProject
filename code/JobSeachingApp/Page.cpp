@@ -6,7 +6,7 @@ Page::Page(QWidget *parent)
 {
     // Constructor implementation (if needed)
     setStyleSheet("background-color: #F2F2F2; color: #333333; border: 1px solid #B0B0B0; border-radius: 5px;");
-    this->setMinimumSize(600, 600);
+    this->setMinimumSize(750, 600);
 }
 
 // Provide a definition for the pure virtual destructor

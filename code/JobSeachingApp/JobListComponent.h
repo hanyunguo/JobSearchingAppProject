@@ -5,7 +5,12 @@
 #include <QTableWidget>
 #include <QPushButton>
 #include <QVBoxLayout>
+#include <QDialog>
 #include <vector>
+#include <QPushButton>
+#include <QLineEdit>
+#include <QLabel>
+#include <QDateTime>
 
 #include "Job.h"
 
@@ -19,6 +24,8 @@ public:
 public slots:
     void onAddJobClicked();
     void updateJobList();
+    void onEditJobClicked(const Job &job);
+    void onDeleteJobClicked(const Job &job);
 
 private:
     void setupUI();

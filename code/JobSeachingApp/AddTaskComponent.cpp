@@ -51,11 +51,22 @@ void AddTaskComponent::setupUI()
     selectedDateLabel->setStyleSheet("background-color: #4CAF50; color: white;font-size: 14px;/*color: #4CAF50; font-size: 14px; font-weight: bold;*/");
     mainLayout->addWidget(selectedDateLabel);
 
+
+
+
+
+
+
     // Handle the button click to show the calendar
     connect(calendarButton, &QPushButton::clicked, [this, calendarWidget]() {
         // Show the calendar when the button is clicked
         calendarWidget->show();
     });
+
+
+
+
+
 
     // Handle the calendar date selection
     connect(calendarWidget, &QCalendarWidget::clicked, [this, calendarWidget, timeEdit](const QDate &date) {
