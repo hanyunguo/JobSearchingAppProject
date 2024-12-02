@@ -14,6 +14,7 @@
 #include <QCalendarWidget>
 #include <QDateTime>
 #include <QTimeEdit>
+#include <QCheckBox>
 
 #include "Task.h"
 
@@ -37,6 +38,7 @@ private:
     std::vector<Task*> taskList;
     QLineEdit *priorityEdit;
     QLabel *priorityLabel;
+    QCheckBox *showPriorityCheckBox;
 };
 
 #endif // TASKLISTCOMPONENT_H

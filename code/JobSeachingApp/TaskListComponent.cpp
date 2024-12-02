@@ -17,6 +17,10 @@ TaskListComponent::TaskListComponent(QWidget *parent)
 void TaskListComponent::setupUI(){
     QVBoxLayout *mainLayout = new QVBoxLayout(this);
 
+    // Create the checkbox for "Show Priority Task"
+    showPriorityCheckBox = new QCheckBox("Show Priority Task", this);
+    mainLayout->addWidget(showPriorityCheckBox, Qt::AlignTop);
+
     // Button to add new task
     addTaskButton = new QPushButton("Add New Task", this);
     addTaskButton->setStyleSheet("QPushButton {"
@@ -32,6 +36,9 @@ void TaskListComponent::setupUI(){
 
     // Connect the button to the slot
     connect(addTaskButton, &QPushButton::clicked, this, &TaskListComponent::onAddTaskClicked);
+
+    // Connect the checkbox to the filtering function
+    connect(showPriorityCheckBox, &QCheckBox::toggled, this, &TaskListComponent::updateTaskList);
 
     // Initialize jobTable as a member variable
     taskTable = new QTableWidget(this);
@@ -50,9 +57,20 @@ void TaskListComponent::updateTaskList()
 
     taskList = XMLManager::getInstance().readTaskXML();
 
+    // Filter tasks based on the checkbox
+    bool showPriority = showPriorityCheckBox->isChecked();
     int row = 0;
     for (Task* task : taskList)
     {
+        bool isPriorityTask = task->getPriority() > 0;  // Assuming a task with priority > 0 is a priority task
+
+        // If checkbox is checked, show only priority tasks
+        if (showPriority && !isPriorityTask)
+            continue;
+        // If checkbox is not checked, show only non-priority tasks
+        if (!showPriority && isPriorityTask)
+            continue;
+
         taskTable->insertRow(row);
 
         QString deadlineStr = task->getDeadline().toString("yyyy-MM-dd HH:mm:ss");

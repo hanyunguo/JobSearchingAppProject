@@ -5,7 +5,7 @@
 #include <QLabel>
 
 #include "AddJobComponent.h"
-#include "XMLManager.h"
+
 AddJobComponent::AddJobComponent(QWidget *parent)
     : QWidget(parent)
 {

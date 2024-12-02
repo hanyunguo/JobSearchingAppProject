@@ -8,7 +8,6 @@
 #include <QTimeEdit>
 
 #include "AddTaskComponent.h"
-#include "XMLManager.h"
 #include "SimpleTask.h"
 #include "PriorityTaskDecorator.h"
 
@@ -51,41 +50,46 @@ void AddTaskComponent::setupUI()
     selectedDateLabel->setStyleSheet("background-color: #4CAF50; color: white;font-size: 14px;/*color: #4CAF50; font-size: 14px; font-weight: bold;*/");
     mainLayout->addWidget(selectedDateLabel);
 
-
-
-
-
-
-
     // Handle the button click to show the calendar
-    connect(calendarButton, &QPushButton::clicked, [this, calendarWidget]() {
+    connect(calendarButton, &QPushButton::clicked, [calendarWidget]() {
         // Show the calendar when the button is clicked
         calendarWidget->show();
     });
 
-
-
-
-
-
     // Handle the calendar date selection
-    connect(calendarWidget, &QCalendarWidget::clicked, [this, calendarWidget, timeEdit](const QDate &date) {
+    connect(calendarWidget, &QCalendarWidget::clicked, [this, calendarWidget, timeEdit]() {
         // Ensure timeEdit is valid and time is set
         if (timeEdit->time().isValid()) {
-            QString formattedDate = date.toString("yyyy-MM-dd");
-            QString formattedTime = timeEdit->time().toString("HH:mm:ss");  // Get the selected time from QTimeEdit
-            QString formattedDeadline = formattedDate + " " + formattedTime;
+            // Get the selected date and the time from the timeEdit widget
+            QDate selectedDate = calendarWidget->selectedDate();
+            QTime selectedTime = timeEdit->time();
 
-            // Update the label to show the selected deadline
-            selectedDateLabel->setText("Selected Deadline: " + formattedDeadline);
+            // Combine the selected date and time into a QDateTime
+            QDateTime selectedDateTime = QDateTime(selectedDate, selectedTime);
 
-            // store the selected date and time for further use
-            selectedDeadline = QDateTime(date, timeEdit->time());
+            // Update the label with the newly selected date and time
+            selectedDateLabel->setText("Selected Deadline: " + selectedDateTime.toString("yyyy-MM-dd HH:mm:ss"));
+            selectedDeadline = selectedDateTime;
 
             // Hide the calendar after selection
             calendarWidget->hide();
         } else {
             qDebug() << "Invalid time selected!";
+        }
+    });
+
+    // Connect the timeEdit valueChanged to update the selected deadline label
+    connect(timeEdit, &QTimeEdit::timeChanged, [this, calendarWidget, timeEdit]() {
+        // Ensure the calendar date is selected
+        QDate selectedDate = calendarWidget->selectedDate();
+        if (selectedDate.isValid()) {
+            // Combine the selected date and time into a QDateTime
+            QTime selectedTime = timeEdit->time();
+            QDateTime selectedDateTime = QDateTime(selectedDate, selectedTime);
+
+            // Update the label with the newly selected date and time
+            selectedDateLabel->setText("Selected Deadline: " + selectedDateTime.toString("yyyy-MM-dd HH:mm:ss"));
+            selectedDeadline = selectedDateTime;  // Store the selected deadline
         }
     });
 
