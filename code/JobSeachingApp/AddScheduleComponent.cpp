@@ -78,8 +78,8 @@ void AddScheduleComponent::addSchedule(const QDate &date, int hour, const std::s
     time_t timeslot = dateTime.toSecsSinceEpoch();
     Schedule schedule(timeslot, task, description, complete);
 
-    AddScheduleCommand* addCommand = new AddScheduleCommand(schedule);
-    addCommand->execute();
+    // Save the schedule using XMLManager
+    XMLManager::getInstance().saveScheduleXML(schedule);
 
     // Update the current schedule
     currentSchedule = schedule;
@@ -103,4 +103,3 @@ void AddScheduleComponent::onSaveClicked()
     // Close the component if necessary
     emit closePopUp();
 }
-

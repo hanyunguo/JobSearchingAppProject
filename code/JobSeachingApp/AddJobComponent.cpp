@@ -78,8 +78,8 @@ void AddJobComponent::addJob(const std::string &jobTitle, const std::string &com
 {
     Job job(jobTitle, companyName, applicationLink, jobDescription);
 
-    AddJobCommand* jobCommand = new AddJobCommand(job);
-    jobCommand->execute();
+    // Save the Job using XMLManager
+    XMLManager::getInstance().saveJobXML(job);
 
     // Update the current job
     currentJob = job;
@@ -88,8 +88,7 @@ void AddJobComponent::addJob(const std::string &jobTitle, const std::string &com
     emit jobUpdated();
 }
 
-void AddJobComponent::onSaveClicked()
-{
+void AddJobComponent::onSaveClicked(){
     // Get input values from UI elements
     QString jobTitle = jobTitleEdit->text();
     QString companyName = companyNameEdit->text();

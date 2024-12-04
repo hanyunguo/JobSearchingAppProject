@@ -3,7 +3,7 @@
 
 #include <QWidget>
 #include "Job.h"
-#include "AddJobCommand.h"
+#include "XMLManager.h"
 
 class QLineEdit;
 class QPushButton;

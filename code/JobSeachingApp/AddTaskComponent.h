@@ -9,7 +9,7 @@
 #include <QCheckBox>
 
 #include "Task.h"
-#include "AddTaskCommand.h"
+#include "XMLManager.h"
 
 class AddTaskComponent : public QWidget
 {

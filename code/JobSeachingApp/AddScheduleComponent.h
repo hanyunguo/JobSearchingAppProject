@@ -5,7 +5,7 @@
 #include <QDate>
 
 #include "Schedule.h"
-#include "AddScheduleCommand.h"
+#include "XMLManager.h"
 
 class QLineEdit;
 class QPushButton;
