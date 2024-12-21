@@ -12,13 +12,13 @@ public:
         // Empty constructor body
     }
 
-    QDateTime getDeadline() const override{
+    QDateTime getDeadline() override{
         return deadline;
     }
-    std::string getTaskDescription() const override{
+    std::string getTaskDescription() override{
         return taskDescription;
     }
-    int getPriority() const override {
+    int getPriority() override {
         return 0;
     }
 

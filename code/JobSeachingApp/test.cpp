@@ -3,6 +3,8 @@
 #include "XMLManager.h"
 #include "AddJobComponent.h"
 #include "AddScheduleComponent.h"
+#include "Task.h"
+#include "PriorityTaskDecorator.h"
 
 using ::testing::Return;
 
@@ -10,7 +12,42 @@ class MockXMLManagerWrapper: public XMLManager {
 public:
     MOCK_METHOD(bool, saveJobXML, (const Job &job), (override));
     MOCK_METHOD(bool, saveScheduleXML, (const Schedule &schedule), (override));
+
 };
+
+class MockTask : public Task {
+public:
+    MOCK_METHOD(QDateTime, getDeadline, (), (override));
+    MOCK_METHOD(int, getPriority, (), (override));
+    MOCK_METHOD(std::string, getTaskDescription, (), (override));
+    MOCK_METHOD(void, setDeadline, (QDateTime), (override));
+    MOCK_METHOD(void, setPriority, (int), (override));
+    MOCK_METHOD(void, setTaskDescription, (std::string), (override));
+};
+
+TEST(TaskDecoratorTest, TestDeadline) {
+    MockTask mock;
+    Task* target = new PriorityTaskDecorator(&mock, 2);
+    QDate date(2024, 12, 1);
+    QTime time(15, 0);  // 15:00:00 (3:00 PM)
+    QDateTime dateTime(date, time);  // Combine date and time
+    EXPECT_CALL(mock, getDeadline()).Times(1).WillOnce(Return(dateTime));
+    EXPECT_EQ(target->getDeadline(), dateTime);
+}
+
+TEST(TaskDecoratorTest, TestPriority) {
+    MockTask mock;
+    Task* target = new PriorityTaskDecorator(&mock, 1);
+    EXPECT_CALL(mock, getPriority()).Times(0);
+    EXPECT_EQ(target->getPriority(), 1);
+}
+
+TEST(TaskDecoratorTest, TestTaskDescription){
+    MockTask mock;
+    Task* target = new TaskDecorator(&mock);
+    EXPECT_CALL(mock, getTaskDescription()).Times(1).WillOnce(Return("Interview"));
+    EXPECT_EQ(target->getTaskDescription(), "Interview");
+}
 // Test for successful job addition
 TEST(AddJobComponentTest, TestsavaJobXML) {
     MockXMLManagerWrapper mock;

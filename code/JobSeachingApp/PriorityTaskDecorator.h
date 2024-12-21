@@ -8,7 +8,7 @@ class PriorityTaskDecorator : public TaskDecorator
 {
 public:
     PriorityTaskDecorator(Task* task, int priority) : TaskDecorator(task), priority(priority) {}
-    int getPriority() const override{
+    int getPriority() override{
         return priority;
     }
 

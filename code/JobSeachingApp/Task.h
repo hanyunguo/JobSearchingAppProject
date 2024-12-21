@@ -10,9 +10,9 @@ public:
     Task(){}
 
     // Getters
-    virtual QDateTime getDeadline() const{return QDateTime();}
-    virtual std::string getTaskDescription() const{return "";}
-    virtual int getPriority() const{return 0;}
+    virtual QDateTime getDeadline() {return QDateTime();}
+    virtual std::string getTaskDescription() {return "";}
+    virtual int getPriority() {return 0;}
 
     // Setters
     virtual void setDeadline(QDateTime deadline){}

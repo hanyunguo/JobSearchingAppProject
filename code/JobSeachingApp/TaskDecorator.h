@@ -1,7 +1,6 @@
 #ifndef TASKDECORATOR_H
 #define TASKDECORATOR_H
 #include "Task.h"
-
 class TaskDecorator : public Task
 {
 protected:
@@ -9,13 +8,13 @@ protected:
 public:
     TaskDecorator(Task* task) : task(task) {}
 
-    QDateTime getDeadline() const override{
+    QDateTime getDeadline() override{
         return task->getDeadline();
     }
-    std::string getTaskDescription() const override{
+    std::string getTaskDescription() override{
         return task->getTaskDescription();
     }
-    int getPriority() const override{
+    int getPriority() override{
         return 0;
     }
 
