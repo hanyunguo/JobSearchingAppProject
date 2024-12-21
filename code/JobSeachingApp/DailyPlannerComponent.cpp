@@ -38,8 +38,8 @@ void DailyPlannerComponent::loadSchedules()
     schedules.clear();
 
     // Use XMLManager to read all schedules
-    XMLManager &xmlManager = XMLManager::getInstance();
-    std::vector<Schedule> allSchedules = xmlManager.readScheduleXML();
+    XMLManager* xmlManager = XMLManager::getInstance();
+    std::vector<Schedule> allSchedules = xmlManager->readScheduleXML();
 
     // Filter schedules for the specific date
     for (const Schedule &schedule : allSchedules)
@@ -326,8 +326,9 @@ void DailyPlannerComponent::handleTimeslotClicked(int hour)
 
 }
 
-void DailyPlannerComponent::onEditScheduleClicked(int hour)
+bool DailyPlannerComponent::onEditScheduleClicked(int hour)
 {
+    bool result;
     // Find the schedule for the specified hour
     Schedule existingSchedule;
     for (const Schedule &schedule : schedules)
@@ -364,7 +365,7 @@ void DailyPlannerComponent::onEditScheduleClicked(int hour)
     layout->addWidget(saveButton);
 
     // When save is clicked, update the schedule and refresh the list
-    connect(saveButton, &QPushButton::clicked, this, [this, taskEdit, descriptionEdit, completedCheck, existingSchedule, editDialog]() {
+    connect(saveButton, &QPushButton::clicked, this, [this, taskEdit, descriptionEdit, completedCheck, existingSchedule, editDialog, &result]() {
         // Create an updated schedule object with new details from the form
         Schedule updatedSchedule(existingSchedule.getTimeslot(),
                                  taskEdit->text().toStdString(),
@@ -372,7 +373,7 @@ void DailyPlannerComponent::onEditScheduleClicked(int hour)
                                  completedCheck->isChecked());
 
         // Pass both existingSchedule and updatedSchedule to the XMLManager for editing
-        XMLManager::getInstance().editScheduleXML(existingSchedule, updatedSchedule);
+        result = XMLManager::getInstance()->editScheduleXML(existingSchedule, updatedSchedule);
 
         // Refresh the schedule list
         updateSchedules();
@@ -383,10 +384,12 @@ void DailyPlannerComponent::onEditScheduleClicked(int hour)
 
     // Execute the dialog
     editDialog->exec();
+    return result;
 }
 
-void DailyPlannerComponent::onDeleteScheduleClicked(int hour)
+bool DailyPlannerComponent::onDeleteScheduleClicked(int hour)
 {
+    bool result = false;
     // Find the schedule for the specified hour
     Schedule scheduleToDelete;
     for (const Schedule &schedule : schedules)
@@ -419,9 +422,9 @@ void DailyPlannerComponent::onDeleteScheduleClicked(int hour)
     buttonLayout->addWidget(noButton);
     layout->addLayout(buttonLayout);
 
-    connect(yesButton, &QPushButton::clicked, this, [this, scheduleToDelete, deleteDialog]() {
+    connect(yesButton, &QPushButton::clicked, this, [this, scheduleToDelete, deleteDialog, &result]() {
         // Call XMLManager to delete the schedule from the XML file
-        XMLManager::getInstance().deleteScheduleXML(scheduleToDelete);
+        result = XMLManager::getInstance()->deleteScheduleXML(scheduleToDelete);
         updateSchedules();  // Refresh the schedule list
         deleteDialog->accept();  // Close the dialog
     });
@@ -429,4 +432,5 @@ void DailyPlannerComponent::onDeleteScheduleClicked(int hour)
     connect(noButton, &QPushButton::clicked, deleteDialog, &QDialog::reject);
 
     deleteDialog->exec();
+    return result;
 }

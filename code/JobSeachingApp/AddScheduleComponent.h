@@ -21,7 +21,7 @@ public:
     explicit AddScheduleComponent(const QDate &date, int hour, QWidget *parent = nullptr);
 
     // Methods to add, delete, and edit schedules
-    void addSchedule(const QDate &date, int hour, const std::string &task, const std::string &description, bool complete);
+    bool addSchedule(const QDate &date, int hour, const std::string &task, const std::string &description, bool complete);
 signals:
     void scheduleUpdated(); // Signal emitted when a schedule is added, edited, or deleted
     void closePopUp();

@@ -55,7 +55,7 @@ void TaskListComponent::updateTaskList()
 {
     taskTable->setRowCount(0); // Clear existing table data
 
-    taskList = XMLManager::getInstance().readTaskXML();
+    taskList = XMLManager::getInstance()->readTaskXML();
 
     // Filter tasks based on the checkbox
     bool showPriority = showPriorityCheckBox->isChecked();
@@ -145,8 +145,9 @@ void TaskListComponent::onAddTaskClicked()
     dialog->exec();
 }
 
-void TaskListComponent::onEditTaskClicked(Task* oldtask)
+bool TaskListComponent::onEditTaskClicked(Task* oldtask)
 {
+    bool result = false;
     // Create a dialog for editing the task
     QDialog *editDialog = new QDialog(this);
     editDialog->setWindowTitle("Edit Task");
@@ -222,7 +223,7 @@ void TaskListComponent::onEditTaskClicked(Task* oldtask)
     saveButton->setFixedWidth(100);  // Fixed width for consistency
     layout->addWidget(saveButton);
 
-    connect(saveButton, &QPushButton::clicked, this, [this, oldtask, taskDescriptionEdit, timeEdit, editDialog, calendarWidget, selectedDateLabel, isPriorityTask]() {
+    connect(saveButton, &QPushButton::clicked, this, [this, oldtask, taskDescriptionEdit, timeEdit, editDialog, calendarWidget, selectedDateLabel, isPriorityTask, &result]() {
         // Retrieve updated values from input fields
         QString taskDescription = taskDescriptionEdit->text();
         int priority = 0;
@@ -245,7 +246,7 @@ void TaskListComponent::onEditTaskClicked(Task* oldtask)
         }
 
         // Update the task in the XML
-        XMLManager::getInstance().editTaskXML(oldtask, updatedTask);
+        result = XMLManager::getInstance()->editTaskXML(oldtask, updatedTask);
 
         // Refresh the task list
         updateTaskList();
@@ -287,10 +288,12 @@ void TaskListComponent::onEditTaskClicked(Task* oldtask)
 
     // Show the edit dialog
     editDialog->exec();
+    return result;
 }
 
-void TaskListComponent::onDeleteTaskClicked(Task *task)
+bool TaskListComponent::onDeleteTaskClicked(Task *task)
 {
+    bool result = false;
     // Create a custom dialog for the delete confirmation
     QDialog *deleteDialog = new QDialog(this);
     deleteDialog->setWindowTitle("Delete Task");
@@ -341,8 +344,8 @@ void TaskListComponent::onDeleteTaskClicked(Task *task)
     layout->setContentsMargins(50, 20, 50, 20);  // Added top and bottom margins
 
     // Connect buttons to actions
-    connect(yesButton, &QPushButton::clicked, this, [this, task, deleteDialog]() {
-        XMLManager::getInstance().deleteTaskXML(task);
+    connect(yesButton, &QPushButton::clicked, this, [this, task, deleteDialog, &result]() {
+        result = XMLManager::getInstance()->deleteTaskXML(task);
         updateTaskList(); // Refresh the job list after deletion
         deleteDialog->accept();  // Close the dialog
     });
@@ -351,4 +354,5 @@ void TaskListComponent::onDeleteTaskClicked(Task *task)
 
     // Execute the dialog
     deleteDialog->exec();
+    return result;
 }

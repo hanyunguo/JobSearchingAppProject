@@ -16,7 +16,7 @@ class AddTaskComponent : public QWidget
     Q_OBJECT
 public:
     explicit AddTaskComponent(QWidget *parent = nullptr);
-    void addTask(const QDateTime &deadline, const std::string &taskDescription, const int &priority);
+    bool addTask(const QDateTime &deadline, const std::string &taskDescription, const int &priority);
 signals:
     void taskUpdated();
     void closePopUp();

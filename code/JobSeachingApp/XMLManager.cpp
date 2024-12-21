@@ -4,11 +4,11 @@
 #include <QXmlStreamReader>
 
 #include "XMLManager.h"
-
+#include <QDebug>
 // Initialize the static instance
-XMLManager XMLManager::xmlManager;
+XMLManager* XMLManager::xmlManager;
 
-XMLManager& XMLManager::getInstance()
+XMLManager* XMLManager::getInstance()
 {
     return xmlManager;
 }
@@ -19,6 +19,7 @@ XMLManager::XMLManager()
 
 bool XMLManager::saveJobXML(const Job &job)
 {
+    qDebug() << "Here";
     // Read existing jobs
     std::vector<Job> jobs = readJobXML();
 
@@ -513,7 +514,7 @@ std::vector<Task*> XMLManager::readTaskXML()
     return tasks;
 }
 
-void XMLManager::editJobXML(const Job &oldJob, const Job &updatedJob)
+bool XMLManager::editJobXML(const Job &oldJob, const Job &updatedJob)
 {
     // Read all jobs from the XML
     std::vector<Job> jobs = readJobXML();
@@ -544,7 +545,7 @@ void XMLManager::editJobXML(const Job &oldJob, const Job &updatedJob)
         if (!file.open(QIODevice::WriteOnly | QIODevice::Text))
         {
             qDebug() << "Error opening file for writing.";
-            return;
+            return jobUpdated;
         }
 
         QXmlStreamWriter xmlWriter(&file);
@@ -572,9 +573,10 @@ void XMLManager::editJobXML(const Job &oldJob, const Job &updatedJob)
     {
         qDebug() << "Job not found!";
     }
+    return jobUpdated;
 }
 
-void XMLManager::editTaskXML(Task* oldTask, Task* updatedTask)
+bool XMLManager::editTaskXML(Task* oldTask, Task* updatedTask)
 {
     // Read all tasks from the XML
     std::vector<Task*> tasks = readTaskXML();
@@ -608,7 +610,7 @@ void XMLManager::editTaskXML(Task* oldTask, Task* updatedTask)
         if (!file.open(QIODevice::WriteOnly | QIODevice::Text))
         {
             qDebug() << "Error opening file for writing.";
-            return;
+            return taskUpdated;
         }
 
         QXmlStreamWriter xmlWriter(&file);
@@ -638,9 +640,10 @@ void XMLManager::editTaskXML(Task* oldTask, Task* updatedTask)
     {
         qDebug() << "Task not found!";
     }
+    return taskUpdated;
 }
 
-void XMLManager::editScheduleXML(const Schedule &oldSchedule, Schedule &newSchedule)
+bool XMLManager::editScheduleXML(const Schedule &oldSchedule, Schedule &newSchedule)
 {
     std::vector<Schedule> schedules = readScheduleXML();
 
@@ -657,14 +660,14 @@ void XMLManager::editScheduleXML(const Schedule &oldSchedule, Schedule &newSched
 
     if (!found)
     {
-        return;  // Schedule not found, no update
+        return found;  // Schedule not found, no update
     }
 
     // Save the updated schedules to the XML file
     QFile file("schedules.xml");
     if (!file.open(QIODevice::WriteOnly | QIODevice::Text))
     {
-        return;
+        return found;
     }
 
     QXmlStreamWriter xmlWriter(&file);
@@ -686,4 +689,5 @@ void XMLManager::editScheduleXML(const Schedule &oldSchedule, Schedule &newSched
     xmlWriter.writeEndDocument();
 
     file.close();
+    return found;
 }

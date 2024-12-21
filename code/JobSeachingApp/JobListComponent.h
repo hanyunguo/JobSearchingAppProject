@@ -24,8 +24,8 @@ public:
 public slots:
     void onAddJobClicked();
     void updateJobList();
-    void onEditJobClicked(const Job &job);
-    void onDeleteJobClicked(const Job &job);
+    bool onEditJobClicked(const Job &job);
+    bool onDeleteJobClicked(const Job &job);
 
 private:
     void setupUI();

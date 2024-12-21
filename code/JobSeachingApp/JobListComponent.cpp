@@ -48,7 +48,7 @@ void JobListComponent::updateJobList()
 {
     jobTable->setRowCount(0); // Clear existing table data
 
-    jobList = XMLManager::getInstance().readJobXML();
+    jobList = XMLManager::getInstance()->readJobXML();
 
     int row = 0;
     for (const Job &job : jobList)
@@ -130,8 +130,9 @@ void JobListComponent::onAddJobClicked()
     dialog->exec();
 }
 
-void JobListComponent::onEditJobClicked(const Job &oldJob)
+bool JobListComponent::onEditJobClicked(const Job &oldJob)
 {
+    bool result = false;
     // Create a new dialog to edit job details
     QDialog *editDialog = new QDialog(this);
     editDialog->setWindowTitle("Edit Job");
@@ -158,7 +159,7 @@ void JobListComponent::onEditJobClicked(const Job &oldJob)
     layout->addWidget(saveButton);
 
     // When save is clicked, update the job and refresh the list
-    connect(saveButton, &QPushButton::clicked, this, [this, titleEdit, companyEdit, linkEdit, descriptionEdit, oldJob, editDialog]() {
+    connect(saveButton, &QPushButton::clicked, this, [this, titleEdit, companyEdit, linkEdit, descriptionEdit, oldJob, editDialog, &result]() {
         // Create an updated job object with new details from the form
         Job updatedJob(titleEdit->text().toStdString(),
                        companyEdit->text().toStdString(),
@@ -166,7 +167,7 @@ void JobListComponent::onEditJobClicked(const Job &oldJob)
                        descriptionEdit->text().toStdString());
 
         // Pass both oldJob and updatedJob to the XMLManager for editing
-        XMLManager::getInstance().editJobXML(oldJob, updatedJob);
+        result = XMLManager::getInstance()->editJobXML(oldJob, updatedJob);
 
         // Refresh the job list
         updateJobList();
@@ -177,10 +178,12 @@ void JobListComponent::onEditJobClicked(const Job &oldJob)
 
     // Execute the dialog
     editDialog->exec();
+    return result;
 }
 
-void JobListComponent::onDeleteJobClicked(const Job &job)
+bool JobListComponent::onDeleteJobClicked(const Job &job)
 {
+    bool result = false;
     // Create a custom dialog for the delete confirmation
     QDialog *deleteDialog = new QDialog(this);
     deleteDialog->setWindowTitle("Delete Job");
@@ -231,9 +234,9 @@ void JobListComponent::onDeleteJobClicked(const Job &job)
     layout->setContentsMargins(50, 20, 50, 20);  // Added top and bottom margins
 
     // Connect buttons to actions
-    connect(yesButton, &QPushButton::clicked, this, [this, job, deleteDialog]() {
+    connect(yesButton, &QPushButton::clicked, this, [this, job, deleteDialog, &result]() {
         // Perform the deletion (remove from list, update XML, etc.)
-        XMLManager::getInstance().deleteJobXML(job);
+        result = XMLManager::getInstance()->deleteJobXML(job);
         updateJobList(); // Refresh the job list after deletion
         deleteDialog->accept();  // Close the dialog
     });
@@ -242,4 +245,5 @@ void JobListComponent::onDeleteJobClicked(const Job &job)
 
     // Execute the dialog
     deleteDialog->exec();
+    return result;
 }

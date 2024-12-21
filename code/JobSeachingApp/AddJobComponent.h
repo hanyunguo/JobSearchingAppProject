@@ -13,7 +13,7 @@ class AddJobComponent : public QWidget
     Q_OBJECT
 public:
     explicit AddJobComponent(QWidget *parent = nullptr);
-    void addJob(const std::string &jobTitle, const std::string &companyName, const std::string &applicationLink, const std::string &jobDescription);
+    bool addJob(const std::string &jobTitle, const std::string &companyName, const std::string &applicationLink, const std::string &jobDescription);
 signals:
     void jobUpdated();
     void closePopUp();

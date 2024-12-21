@@ -27,8 +27,8 @@ public:
 public slots:
     void onAddTaskClicked();
     void updateTaskList();
-    void onEditTaskClicked(Task* oldtask);
-    void onDeleteTaskClicked(Task* task);
+    bool onEditTaskClicked(Task* oldtask);
+    bool onDeleteTaskClicked(Task* task);
 
 private:
     void setupUI();

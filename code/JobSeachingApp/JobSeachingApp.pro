@@ -32,7 +32,8 @@ SOURCES += \
     ToolsSidebarFactory.cpp \
     XMLManager.cpp \
     main.cpp \
-    mainwindow.cpp
+    mainwindow.cpp \
+    test.cpp
 
 HEADERS += \
     AddJobComponent.h \
@@ -71,3 +72,9 @@ FORMS += \
 qnx: target.path = /tmp/$${TARGET}/bin
 else: unix:!android: target.path = /opt/$${TARGET}/bin
 !isEmpty(target.path): INSTALLS += target
+
+# Add Google Test and Google Mock include paths
+INCLUDEPATH += /Users/hanyunguo/googletest/googletest/include
+INCLUDEPATH += /Users/hanyunguo/googletest/googlemock/include
+
+LIBS += -L/Users/hanyunguo/googletest/build/lib -lgmock -lgtest

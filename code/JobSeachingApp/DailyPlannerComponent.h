@@ -27,8 +27,8 @@ signals:
 
 public slots:
     void updateSchedules();
-    void onEditScheduleClicked(int hour);
-    void onDeleteScheduleClicked(int hour);
+    bool onEditScheduleClicked(int hour);
+    bool onDeleteScheduleClicked(int hour);
 
 private:
     void setupUI();

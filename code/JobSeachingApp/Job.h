@@ -2,13 +2,16 @@
 #define JOB_H
 
 #include <string>
-
 class Job
 {
 public:
     Job();
     Job(const std::string &jobTitle, const std::string &companyName, const std::string &applicationLink, const std::string &jobDescription);
 
+    bool operator==(const Job& other) const {
+        return jobTitle == other.getJobTitle() && companyName == other.getCompanyName()
+               && applicationLink == other.getApplicationLink() && jobDescription == other.jobDescription;
+    }
     // Getters
     std::string getJobTitle() const;
     std::string getCompanyName() const;

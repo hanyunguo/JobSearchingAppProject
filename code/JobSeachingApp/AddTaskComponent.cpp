@@ -144,7 +144,7 @@ void AddTaskComponent::connectSignals()
 }
 
 
-void AddTaskComponent::addTask(const QDateTime &deadline, const std::string &taskDescription, const int &priority)
+bool AddTaskComponent::addTask(const QDateTime &deadline, const std::string &taskDescription, const int &priority)
 {
     // Create the Task object with deadline, description, and priority
     Task *task = new SimpleTask(deadline, taskDescription);
@@ -154,13 +154,14 @@ void AddTaskComponent::addTask(const QDateTime &deadline, const std::string &tas
     }
 
     // Save the task using XMLManager
-    XMLManager::getInstance().saveTaskXML(task);
+    bool addResult = XMLManager::getInstance()->saveTaskXML(task);
 
     // Update the current task
     currentTask = task;
 
     // Emit the signal to notify that the task has been updated
     emit taskUpdated();
+    return addResult;
 }
 
 void AddTaskComponent::onSaveClicked()

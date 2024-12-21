@@ -30,7 +30,7 @@ public:
         this->taskDescription = taskDescription;
     }
     void setPriority(int priority) override{
-        qWarning() << "try to simple task with priority: " << priority;
+        qWarning() << "try to simple task with priority: " << QString::number(priority);
     }
 private:
     QDateTime deadline;

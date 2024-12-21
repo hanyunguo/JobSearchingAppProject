@@ -13,12 +13,14 @@ class XMLManager
 {
 public:
     // Singleton instance
-    static XMLManager& getInstance();
-
+    static XMLManager* getInstance();
+    static void setInstance(XMLManager* manager){
+        xmlManager = manager;
+    }
     // Methods
-    bool saveJobXML(const Job &job);
-    bool saveTaskXML(Task *task);
-    bool saveScheduleXML(const Schedule &schedule);
+    virtual bool saveJobXML(const Job &job);
+    virtual bool saveTaskXML(Task *task);
+    virtual bool saveScheduleXML(const Schedule &schedule);
 
     bool deleteJobXML(const Job &job);
     bool deleteTaskXML(Task* task);
@@ -28,17 +30,17 @@ public:
     std::vector<Schedule> readScheduleXML();
     std::vector<Task*> readTaskXML();
 
-    void editJobXML(const Job &oldJob, const Job &updatedJob);
-    void editTaskXML(Task* oldTask, Task* updatedTask);
-    void editScheduleXML(const Schedule &oldschedule, Schedule &newschedule);
+    bool editJobXML(const Job &oldJob, const Job &updatedJob);
+    bool editTaskXML(Task* oldTask, Task* updatedTask);
+    bool editScheduleXML(const Schedule &oldschedule, Schedule &newschedule);
 
-private:
+protected:
     // Constructor
     XMLManager();
 
+private:
     // Instance variables
-    static XMLManager xmlManager;
+    static XMLManager* xmlManager;
 };
 
 #endif // XMLMANAGER_H
-

@@ -12,6 +12,11 @@ public:
     Schedule();
     Schedule(time_t timeslot, const std::string &task, const std::string &description, bool completed);
 
+    bool operator==(const Schedule& other) const {
+        return timeslot == other.getTimeslot() && task == other.getTask()
+        && description == other.getDescription() && completed == other.isCompleted();
+    }
+
     // Getters and Setters
     time_t getTimeslot() const;
     void setTimeslot(time_t timeslot);

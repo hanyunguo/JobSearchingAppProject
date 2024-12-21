@@ -9,6 +9,7 @@
 #include "AddScheduleComponent.h"
 #include "XMLManager.h"
 #include "Schedule.h"
+#include "DailyPlannerComponent.h"
 
 AddScheduleComponent::AddScheduleComponent(const QDate &date, int hour, QWidget *parent)
     : QWidget(parent), date(date), hour(hour)
@@ -72,20 +73,21 @@ void AddScheduleComponent::connectSignals()
     connect(saveButton, &QPushButton::clicked, this, &AddScheduleComponent::onSaveClicked);
 }
 
-void AddScheduleComponent::addSchedule(const QDate &date, int hour, const std::string &task, const std::string &description, bool complete)
+bool AddScheduleComponent::addSchedule(const QDate &date, int hour, const std::string &task, const std::string &description, bool complete)
 {    // Create a new Schedule object
     QDateTime dateTime(date, QTime(hour, 0));
     time_t timeslot = dateTime.toSecsSinceEpoch();
     Schedule schedule(timeslot, task, description, complete);
 
     // Save the schedule using XMLManager
-    XMLManager::getInstance().saveScheduleXML(schedule);
+    bool addResult = XMLManager::getInstance()->saveScheduleXML(schedule);
 
     // Update the current schedule
     currentSchedule = schedule;
 
     // Emit the signal to notify that the schedule has been updated
     emit scheduleUpdated();
+    return addResult;
 }
 void AddScheduleComponent::onSaveClicked()
 {
