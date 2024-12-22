@@ -22,7 +22,6 @@ XMLManager::XMLManager()
 
 bool XMLManager::saveJobXML(const Job &job)
 {
-    qDebug() << "Here";
     // Read existing jobs
     std::vector<Job> jobs = readJobXML();
 
