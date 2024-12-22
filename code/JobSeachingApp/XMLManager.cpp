@@ -10,6 +10,9 @@ XMLManager* XMLManager::xmlManager;
 
 XMLManager* XMLManager::getInstance()
 {
+    if(xmlManager == nullptr) {
+        xmlManager = new XMLManager();
+    }
     return xmlManager;
 }
 
