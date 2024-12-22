@@ -2,7 +2,34 @@
 
 ## Description
 
-The **Job Searching App** is an application designed to help job seekers effectively organize and track their job applications, deadlines, and tasks in a competitive job market. This software includes several key features: a job applications tracker, a task and deadline organizer, and a daily planner. All user-inputted data is stored in **XML format** locally, ensuring that information is retained even after the application is closed.
+The **Job Searching App** is designed to help job seekers stay organized during their job hunt. In a competitive job market, keeping track of job applications, deadlines, and tasks can be overwhelming. This app offers a simple and effective way to manage everything in one place.
+
+### Key Features:
+- **Job Applications Tracker**: Keep all your job applications organized with details like job title, company name, application links, and job descriptions. Never lose track of an opportunity again.
+- **Task and Deadline Organizer**: Stay on top of important dates like application deadlines, interview schedules, and follow-up reminders. You can easily organize tasks to make sure nothing slips through the cracks.
+- **Daily Planner**: Plan your day with a built-in daily planner that helps you stay productive and focused on your job search goals.
+- **Data Storage**: All your data is saved locally in **XML format**, so you won’t lose any information when you close the app.
+- **Simple and Clean Interface**: The app’s user-friendly design makes it easy to add, edit, or remove job applications and tasks. Everything is right at your fingertips.
+
+### Why Use This App?
+- **Stay Organized**: Keep all your job applications and tasks in one place to make it easier to track everything without feeling overwhelmed.
+- **Save Time**: The app helps you quickly find and manage your job search details, so you can spend less time organizing and more time applying.
+- **Flexible & Customizable**: Whether you’re applying for several jobs at once or focusing on a specific role, the app lets you prioritize tasks and set reminders based on your needs.
+
+### Additional Features:
+- **Customizable Task Management**: Prioritize your tasks and track deadlines based on urgency.
+- **macOS ARM64 Compatible**: The app runs smoothly on macOS ARM64 for a reliable experience.
+- **Efficient Performance**: It’s lightweight and designed to handle multiple job applications without slowing down.
+
+---
+
+<img width="749" alt="Screenshot 2024-12-21 at 23 00 26" src="https://github.com/user-attachments/assets/1038902c-d20c-43ab-9e3b-e764771a2a3c" />
+
+<img width="751" alt="Screenshot 2024-12-21 at 23 00 59" src="https://github.com/user-attachments/assets/511e000d-8dc2-41d0-a108-ff53106a8cf4" />
+
+<img width="742" alt="Screenshot 2024-12-21 at 23 01 55" src="https://github.com/user-attachments/assets/1c1cfa79-dbf9-4ea0-a878-fd1c48467242" />
+
+<img width="750" alt="Screenshot 2024-12-21 at 23 02 17" src="https://github.com/user-attachments/assets/e292d70c-4ea4-44d5-a9ca-87e236f38d34" />
 
 ## Dependencies
 
