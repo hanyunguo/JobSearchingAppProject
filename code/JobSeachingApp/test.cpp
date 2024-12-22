@@ -8,7 +8,7 @@
 
 using ::testing::Return;
 
-class MockXMLManagerWrapper: public XMLManager {
+class MockXMLManager: public XMLManager {
 public:
     MOCK_METHOD(bool, saveJobXML, (const Job &job), (override));
     MOCK_METHOD(bool, saveScheduleXML, (const Schedule &schedule), (override));
@@ -20,9 +20,6 @@ public:
     MOCK_METHOD(QDateTime, getDeadline, (), (override));
     MOCK_METHOD(int, getPriority, (), (override));
     MOCK_METHOD(std::string, getTaskDescription, (), (override));
-    MOCK_METHOD(void, setDeadline, (QDateTime), (override));
-    MOCK_METHOD(void, setPriority, (int), (override));
-    MOCK_METHOD(void, setTaskDescription, (std::string), (override));
 };
 
 TEST(TaskDecoratorTest, TestDeadline) {
@@ -50,7 +47,7 @@ TEST(TaskDecoratorTest, TestTaskDescription){
 }
 // Test for successful job addition
 TEST(AddJobComponentTest, TestsavaJobXML) {
-    MockXMLManagerWrapper mock;
+    MockXMLManager mock;
     AddJobComponent testAddJobComponent;
     XMLManager* origin = XMLManager::getInstance();
     const Job testJob("Software Engineer", "Company X", "http://company.com/job123", "Job description");
@@ -64,7 +61,7 @@ TEST(AddJobComponentTest, TestsavaJobXML) {
 
 // Test for failed job addition (edge case)
 TEST(JobListComponentTest, AddJobCallsXMLManagerFailure) {
-    MockXMLManagerWrapper mock;
+    MockXMLManager mock;
     AddJobComponent testAddJobComponent;
     XMLManager* origin = XMLManager::getInstance();
     const Job testJob("Software Engineer", "Company X", "http://company.com/job123", "Job description");
@@ -78,7 +75,7 @@ TEST(JobListComponentTest, AddJobCallsXMLManagerFailure) {
 
 // Test for successful schedule addition
 TEST(DailyPlannerComponentTest, AddScheduleCallsXMLManagerSuccess) {
-    MockXMLManagerWrapper mock;
+    MockXMLManager mock;
     QDate date(2024, 12, 1);
     QTime time(14, 0);  // 14:00:00 (2:00 PM)
     QDateTime dateTime(date, time);  // Combine date and time
@@ -99,7 +96,7 @@ TEST(DailyPlannerComponentTest, AddScheduleCallsXMLManagerSuccess) {
 
 // Test for failed schedule addition (edge case)
 TEST(DailyPlannerComponentTest, AddScheduleCallsXMLManagerFailure) {
-    MockXMLManagerWrapper mock;
+    MockXMLManager mock;
     QDate date(2024, 12, 1);
     QTime time(14, 0);  // 14:00:00 (2:00 PM)
     QDateTime dateTime(date, time);  // Combine date and time
