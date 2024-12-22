@@ -1,3 +1,82 @@
+# Job Searching App
+
+## Description
+
+The **Job Searching App** is an application designed to help job seekers effectively organize and track their job applications, deadlines, and tasks in a competitive job market. This software includes several key features: a job applications tracker, a task and deadline organizer, and a daily planner. All user-inputted data is stored in **XML format** locally, ensuring that information is retained even after the application is closed.
+
+## Dependencies
+
+- **Qt Creator**: The project is developed and built using Qt Creator, which is compatible with **macOS ARM64** architecture.
+- **Google Test (gtest)**: Used for writing and running unit tests in the project.
+
+## Setup Procedure for Google Test (gtest)
+
+Follow these steps to set up Google Test for your project:
+
+1. **Clone the Google Test Repository:**
+
+   Run the following command to clone the Google Test repository:
+   ```bash
+   git clone https://github.com/google/googletest.git
+   ```
+
+2. **Verify Google Test Build:**
+    
+- **MacOs**: Confirm that the libraries (libgmock.a, libgtest.a) exist in /path/to/googletest/install/lib. If not, rebuild the project with the following steps:
+
+    ```bash
+    cd /path/to/googletest
+    mkdir build
+    cd build
+    cmake -DCMAKE_OSX_ARCHITECTURES=arm64 ..
+    cmake --build .
+    ```
+
+- Confirm the existence of the libraries using:
+
+    ```bash
+    find . -name "libgtest.a"
+    find . -name "libgmock.a"
+    ```
+
+- Verify that the libraries are built for arm64:
+
+    ```bash
+    lipo -info /path/to/libgtest.a
+    lipo -info /path/to/libgmock.a
+    ```
+3. Update the .pro File:
+
+    Ensure that the paths to the Google Test include and library directories are correctly set in your .pro file:
+
+    ```bash
+    INCLUDEPATH += /path/to/googletest/include
+    INCLUDEPATH += /path/to/googletest/googlemock/include
+    LIBS += -L/path/to/googletest/build/lib -lgmock -lgtest
+     ```
+4. Debug Build Errors:
+    
+    If you encounter build errors, check the following:
+    - Ensure INCLUDEPATH and LIBS are accurate.
+    - If both gmock and gtest are used, ensure the linking order is correct (i.e., -lgmock should come before -lgtest).
+    - Clean the build cache in Qt Creator and rebuild.
+
+
+
+## Compiling and Running the Project
+
+1. **Clone the Project Repository:** Clone the repository containing the project code:
+
+    ```bash
+    git clone git@github.com:UWO-CS-3307/project-deliverable-3-hanyun-doris-s-team.git
+    ```
+
+2. **Open the Project in Qt Creator:** Launch Qt Creator, and open the .pro file located in the project directory.
+3. **Build the Project:** Click on the green run button in Qt Creator to build and run the project.
+4. **Run Test Cases:** The test cases can also be executed by clicking the green run button in Qt Creator. This will run the project along with the test cases.
+
+
+
 [![Review Assignment Due Date](https://classroom.github.com/assets/deadline-readme-button-22041afd0340ce965d47ae6ef1cefeee28c7c493a6346c4f15d667ab976d596c.svg)](https://classroom.github.com/a/_YxQha_I)
 # Final Project Template - CS 3307
 A sample template for the final project of CS 3307
